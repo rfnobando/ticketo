@@ -1,4 +1,4 @@
-# Sistema de Gestión de Tickets
+# Ticketo
 
 ## Información del Proyecto
 
@@ -18,7 +18,7 @@
 - Rodrigo Obando
 - Santiago Zurlo
 
-Este es un proyecto académico de consola desarrollado en Java 21 utilizando Spring Boot como framework principal, junto con Spring Data JPA para el acceso a datos.
+Este es un proyecto académico web desarrollado en Java 21 utilizando Spring Boot como framework principal, junto con Spring Data JPA para el acceso a datos.
 El objetivo es simular un sistema de soporte mediante tickets, diferenciando roles entre clientes y empleados.
 
 ## Requisitos
@@ -34,7 +34,6 @@ El proyecto utiliza las siguientes dependencias:
 - Spring Boot
 - Spring Data JPA
 - Spring Web 
-- jBCrypt 0.4 
 
 Las dependencias están gestionadas automáticamente mediante Maven en el archivo pom.xml.
 
@@ -45,13 +44,14 @@ Para comenzar, clonar este repositorio:
 ```bash
 git clone https://github.com/rfnobando/ticketo.git
 ```
-## Funcionalidades Principales
+## Funcionalidades 
 
 ### Cliente
 
 - ✅ Registrarse
 - ✅ Iniciar sesión
 - ✅ Crear ticket
+- ✅ Enviar mensaje en ticket
 - ✅ Ver tickets creados
 - ✅ Ver mensajes de un ticket creado
 - ✅ Responder un ticket creado
@@ -59,14 +59,25 @@ git clone https://github.com/rfnobando/ticketo.git
 ### Empleado
 
 - ✅ Iniciar sesión
+- ✅ Registrar empleado
+- ✅ Asignar rol
+- ✅ Quitar rol
+- ✅ Ver lista de usuarios
+- ✅ Ver lista de umpleados
+- ✅ Agregar categoria de ticket
+- ✅ Agregar departamento
+- ✅ Asignar departamento
+- ✅ Asignar categoria del ticket a un departamento
+- ✅ Asignar salario
 - ✅ Elegir un ticket sin asignar
+- ✅ Enviar mensaje en ticket
 - ✅ Ver tickets asignados
 - ✅ Ver mensajes de un ticket asignado
 - ✅ Responder un ticket asignado
+- ✅ Marcar ticket como resuelto
 - ✅ Cerrar un ticket asignado
 
-La autenticación de usuarios se maneja internamente en memoria.
-Se utiliza jBCrypt para el almacenamiento seguro de contraseñas.
+La autenticacion se maneja con Spring Security.
 
 ## Ejecución
 
