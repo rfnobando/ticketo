@@ -51,7 +51,6 @@ git clone https://github.com/rfnobando/ticketo.git
 - ✅ Registrarse
 - ✅ Iniciar sesión
 - ✅ Crear ticket
-- ✅ Enviar mensaje en ticket
 - ✅ Ver tickets creados
 - ✅ Ver mensajes de un ticket creado
 - ✅ Responder un ticket creado
@@ -63,19 +62,18 @@ git clone https://github.com/rfnobando/ticketo.git
 - ✅ Asignar rol
 - ✅ Quitar rol
 - ✅ Ver lista de usuarios
-- ✅ Ver lista de umpleados
+- ✅ Ver lista de empleados
 - ✅ Agregar categoria de ticket
 - ✅ Agregar departamento
-- ✅ Asignar departamento
+- ✅ Asignar empleado a un departamento
 - ✅ Asignar categoria del ticket a un departamento
 - ✅ Asignar salario
-- ✅ Elegir un ticket sin asignar
 - ✅ Enviar mensaje en ticket
-- ✅ Ver tickets asignados
+- ✅ Ver tickets contestados
+- ✅ Ver tickets del departamento
 - ✅ Ver mensajes de un ticket asignado
-- ✅ Responder un ticket asignado
 - ✅ Marcar ticket como resuelto
-- ✅ Cerrar un ticket asignado
+- ✅ Cerrar un ticket 
 
 La autenticacion se maneja con Spring Security.
 
