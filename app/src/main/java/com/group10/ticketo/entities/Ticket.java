@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -20,12 +21,24 @@ public class Ticket {
     private String title;
 
     @CreationTimestamp
+    @Column(name = "creation_date")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "update_date")
     private LocalDateTime updatedAt;
-    //private Cliente cliente;
-    //private Categoria categoriaTicket;
-    //private List<TicketEstado> estados;
-    //private List<MensajeTicket> mensajes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id",nullable = false)
+    private Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_category_id",nullable = false)
+    private TicketCategory ticketCategory;
+
+    @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
+    private Set<TicketStatus> states;
+
+    @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
+    private Set<TicketMessage> messages;
 }
