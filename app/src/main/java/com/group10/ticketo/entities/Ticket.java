@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -37,8 +37,8 @@ public class Ticket {
     private TicketCategory ticketCategory;
 
     @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
-    private Set<TicketStatus> states;
+    private List<TicketStatus> states;
 
     @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
-    private Set<TicketMessage> messages;
+    private List<TicketMessage> messages;
 }

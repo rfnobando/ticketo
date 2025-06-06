@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -21,7 +21,7 @@ public class Role  {
     private String role;
 
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private List<User> users;
 
     @ManyToMany
     @JoinTable(
@@ -29,7 +29,7 @@ public class Role  {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
-    private Set<Permission> permissions;
+    private List<Permission> permissions;
 
 
 

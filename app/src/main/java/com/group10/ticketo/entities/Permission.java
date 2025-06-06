@@ -3,7 +3,7 @@ package com.group10.ticketo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "permissions")
@@ -20,6 +20,6 @@ public class Permission  {
     private String permission;
 
     @ManyToMany(mappedBy = "permissions")
-    private Set<Role> roles;
+    private List<Role> roles;
 
 }
