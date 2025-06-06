@@ -3,7 +3,7 @@ package com.group10.ticketo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "ticket_categories")
@@ -20,9 +20,9 @@ public class TicketCategory  {
     private String name;
 
     @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
-    private Set<Ticket> tickets;
+    private List<Ticket> tickets;
 
     @ManyToMany(mappedBy = "ticket_categories")
-    private Set<Department> departments;
+    private List<Department> departments;
 
 }

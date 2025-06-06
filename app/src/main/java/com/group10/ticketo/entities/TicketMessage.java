@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Set;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "ticket_messages")
@@ -24,8 +25,8 @@ public class TicketMessage  {
     private String urlPhoto;
 
     @CreationTimestamp
-    @Column(name = "registration_date")
-    private String registrationDate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id",nullable = false)

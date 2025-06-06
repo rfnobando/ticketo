@@ -2,7 +2,7 @@ package com.group10.ticketo.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
+import java.util.List;
 
 @MappedSuperclass
 @Getter
@@ -26,5 +26,5 @@ public abstract class Person {
 
 
     @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
-    protected Set<TicketMessage> ticketMessages;
+    protected List<TicketMessage> ticketMessages;
 }

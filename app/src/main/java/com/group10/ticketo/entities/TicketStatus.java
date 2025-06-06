@@ -21,12 +21,12 @@ public class TicketStatus  {
     private Long id;
 
     @CreationTimestamp
-    @Column(name = "creation_date")
-    private String creationDate;
+    @Column(name = "creation_at")
+    private LocalDateTime creationAt;
 
     @UpdateTimestamp
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id",nullable = false)

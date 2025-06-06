@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -23,8 +24,8 @@ public class User  {
     private String password;
 
     @CreationTimestamp
-    @Column(name = "registration_date")
-    private String registrationDate;
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
 
     @OneToOne(mappedBy = "user")
     private Person person;
@@ -35,5 +36,5 @@ public class User  {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 }

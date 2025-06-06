@@ -3,7 +3,7 @@ package com.group10.ticketo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
@@ -21,6 +21,6 @@ public class Employee extends Person {
     private Department department;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private Set<Pay> payments;
+    private List<Pay> payments;
 
 }
