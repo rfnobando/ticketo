@@ -1,5 +1,6 @@
 package com.group10.ticketo.services;
 
 public interface IMailService {
-    void sendMail(String from, String to, String subject, String body);
+    void sendMail(String to, String subject, String body)throws Exception;
+    //void sendTicketMessageToClient(TicketMessage ticketMessage) throws Exception;
 }

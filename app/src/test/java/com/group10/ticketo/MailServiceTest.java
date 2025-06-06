@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 // para el test no levantar la bd (que no esta configurada) se usa el @EnableAutoConfiguration
-/*@EnableAutoConfiguration(exclude = {
+@EnableAutoConfiguration(exclude = {
         DataSourceAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class
-})*/
+})
 public class MailServiceTest {
 
     @Autowired
@@ -21,11 +21,17 @@ public class MailServiceTest {
 
     @Test
     public void testEnviarCorreo() {
-        mailService.sendMail(
-                "ticketo.unla@gmail.com",
-                "alanleonelmaciel@gmail.com",
-                "Prueba desde Spring Boot",
-                "Este es un correo de prueba enviado exitosamente."
-        );
+        System.out.println("EMAIL: " + System.getenv("EMAIL"));
+        System.out.println("APP_PASSWORD: " + System.getenv("APP_PASSWORD"));
+        try{
+            mailService.sendMail(
+                    "eginartedelgado@gmail.com",
+                    "Prueba desde Spring Boot",
+                    "Este es un correo de prueba enviado exitosamente."
+            );
+        }catch (Exception e){
+            //e.printStackTrace();
+            System.out.println("Error al enviar el correo: " + e.getMessage());
+        }
     }
 }
