@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "payments")
+@Table(name = "salaries")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pay  {
+public class Salary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
