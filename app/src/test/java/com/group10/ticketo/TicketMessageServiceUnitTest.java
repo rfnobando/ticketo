@@ -1,7 +1,7 @@
 package com.group10.ticketo;
 
 import com.group10.ticketo.entities.TicketMessage;
-import com.group10.ticketo.repositories.TicketMessageRepository;
+import com.group10.ticketo.repositories.ITicketMessageRepository;
 import com.group10.ticketo.services.implementation.TicketMessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class TicketMessageServiceUnitTest {
 
     @Mock
-    private TicketMessageRepository ticketMessageRepository;
+    private ITicketMessageRepository ticketMessageRepository;
 
     @InjectMocks
     private TicketMessageService ticketMessageService;

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TicketMessageRepository extends JpaRepository<TicketMessage,Long> {
+public interface ITicketMessageRepository extends JpaRepository<TicketMessage,Long> {
 
     //Trae todos los mensajes por ID de ticket
     public abstract List<TicketMessage> findByTicketId(Long ticketId);
