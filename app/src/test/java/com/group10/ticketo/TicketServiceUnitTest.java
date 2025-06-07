@@ -49,4 +49,31 @@ public class TicketServiceUnitTest {
         // Verificar que el repositorio se haya llamado correctamente
         verify(ticketRepository, times(1)).findByCustomerId(customerId);
     }
+
+    @Test
+    public void testFindTicketsByDepartmentIdReturnsList() {
+        Long departmentId = 1L;
+
+        Ticket ticket1 = new Ticket();
+        ticket1.setId(300L);
+
+        Ticket ticket2 = new Ticket();
+        ticket2.setId(400L);
+
+        List<Ticket> mockTickets = Arrays.asList(ticket1, ticket2);
+
+        // Simular comportamiento del repositorio
+        when(ticketRepository.findTicketsByDepartmentId(departmentId)).thenReturn(mockTickets);
+
+        // Llamar al método del servicio
+        List<Ticket> result = ticketService.findTicketsByDepartmentId(departmentId);
+
+        // Validaciones
+        assertEquals(2, result.size());
+        assertEquals(300L, result.get(0).getId());
+        assertEquals(400L, result.get(1).getId());
+
+        // Verificar interacción con el repositorio
+        verify(ticketRepository, times(1)).findTicketsByDepartmentId(departmentId);
+    }
 }
