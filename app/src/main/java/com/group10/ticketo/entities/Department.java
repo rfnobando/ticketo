@@ -24,7 +24,7 @@ public class Department  {
 
     @ManyToMany
     @JoinTable(
-            name = "department_ticket_category", // Nombre de la tabla de unión
+            name = "departments_ticket_categories", // Nombre de la tabla de unión
             joinColumns = @JoinColumn(name = "department_id"),
             inverseJoinColumns = @JoinColumn(name = "ticket_category_id")
     )

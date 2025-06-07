@@ -32,7 +32,7 @@ public class User  {
 
     @ManyToMany
     @JoinTable(
-            name = "user_role", // Nombre de la tabla de unión
+            name = "users_roles", // Nombre de la tabla de unión
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
