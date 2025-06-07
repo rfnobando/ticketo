@@ -18,6 +18,8 @@ public class TicketService implements ITicketService {
     public List<Ticket> findByCustomerId(Long customerId){
         return ticketRepository.findByCustomerId(customerId);
     }
-
-
+    @Override
+    public List<Ticket> findTicketsByDepartmentId(Long departmentId){
+        return ticketRepository.findTicketsByDepartmentId(departmentId);
+    }
 }
