@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,7 +13,7 @@ import java.util.List;
 public abstract class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected long id;
 
     protected String name;

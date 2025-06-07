@@ -19,10 +19,10 @@ public class TicketCategory  {
 
     private String name;
 
-    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketCategory",fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
-    @ManyToMany(mappedBy = "ticket_categories")
+    @ManyToMany(mappedBy = "ticketCategories")
     private List<Department> departments;
 
 }
