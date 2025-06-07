@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="fragments/head :: head('Example')">
+<head th:replace="~{fragments/head :: head('Example')}">
     <title></title>
 </head>
 <body id="page-top">
     <div id="wrapper">
-        <ul th:replace="fragments/sidebar :: sidebar"></ul>
+        <ul th:replace="~{fragments/sidebar :: sidebar}"></ul>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <nav th:replace="fragments/topbar :: topbar"></nav>
+                <nav th:replace="~{fragments/topbar :: topbar}"></nav>
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -18,11 +18,11 @@
                     <!--<div class="row"></div>-->
                 </div>
             </div>
-            <footer th:replace="fragments/footer :: footer"></footer>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
         </div>
     </div>
-    <a th:replace="fragments/utils :: scrollToTop"></a>
-    <div th:replace="fragments/utils :: logoutModal"></div>
-    <div th:replace="fragments/scripts :: scripts"></div>
+    <a th:replace="~{fragments/utils :: scrollToTop}"></a>
+    <div th:replace="~{fragments/utils :: logoutModal}"></div>
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
 </body>
 </html>

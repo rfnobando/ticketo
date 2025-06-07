@@ -21,11 +21,11 @@ public class Ticket {
     private String title;
 
     @CreationTimestamp
-    @Column(name = "creation_date")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "update_date")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

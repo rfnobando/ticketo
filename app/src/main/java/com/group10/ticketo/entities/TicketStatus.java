@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "ticket_states")
+@Table(name = "ticket_statuses")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,11 +21,11 @@ public class TicketStatus  {
     private Long id;
 
     @CreationTimestamp
-    @Column(name = "creation_at")
+    @Column(name = "created_at")
     private LocalDateTime creationAt;
 
     @UpdateTimestamp
-    @Column(name = "update_at")
+    @Column(name = "updated_at")
     private LocalDateTime updateAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

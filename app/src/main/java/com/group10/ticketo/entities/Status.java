@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "states")
+@Table(name = "statuses")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +18,5 @@ public class Status  {
     private Long id;
 
     private String name;
-
-
 
 }
