@@ -1,6 +1,8 @@
 package com.group10.ticketo.services;
 
+import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +20,6 @@ public interface ITicketMessageService {
     //Ultimo mensaje de un ticket
     public Optional<TicketMessage> findFirstByTicketIdOrderByCreatedAtDesc(Long ticketId);
 
+    //Lista de Tickets que un empleado mando mensaje
+    public List<Ticket> findTicketsByEmployeeId(Long employeeId);
 }
