@@ -1,9 +1,11 @@
 package com.group10.ticketo.services.implementation;
 
+import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
 import com.group10.ticketo.repositories.ITicketMessageRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,5 +38,9 @@ public class TicketMessageService implements ITicketMessageService {
     //Ultimo mensaje de un ticket
     public Optional<TicketMessage> findFirstByTicketIdOrderByCreatedAtDesc(Long ticketId){
         return ticketMessageRepository.findFirstByTicketIdOrderByCreatedAtDesc(ticketId);
+    }
+    @Override
+    public List<Ticket> findTicketsByEmployeeId(Long employeeId){
+        return ticketMessageRepository.findTicketsByEmployeeId(employeeId);
     }
 }
