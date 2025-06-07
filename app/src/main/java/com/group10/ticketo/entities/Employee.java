@@ -21,6 +21,6 @@ public class Employee extends Person {
     private Department department;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private List<Pay> payments;
+    private List<Salary> payments;
 
 }
