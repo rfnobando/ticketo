@@ -1,7 +1,7 @@
 package com.group10.ticketo.services.implementation;
 
 import com.group10.ticketo.entities.TicketMessage;
-import com.group10.ticketo.repositories.TicketMessageRepository;
+import com.group10.ticketo.repositories.ITicketMessageRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class TicketMessageService implements ITicketMessageService {
 
     @Autowired
-    private TicketMessageRepository ticketMessageRepository;
+    private ITicketMessageRepository ticketMessageRepository;
 
     @Override
     //Trae todos los mensajes por ID de ticket
