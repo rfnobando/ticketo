@@ -35,4 +35,6 @@ public class TicketMessage  {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id",nullable = false)
     private Person person;
+
+
 }
