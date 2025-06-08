@@ -21,8 +21,8 @@ public class TicketMessage  {
 
     private String body;
 
-    @Column(name = "url_photo")
-    private String urlPhoto;
+    @Column(name = "picture_url")
+    private String pictureUrl;
 
     @CreationTimestamp
     @Column(name = "created_at")
