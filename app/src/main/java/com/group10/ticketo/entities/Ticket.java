@@ -37,7 +37,7 @@ public class Ticket {
     private TicketCategory ticketCategory;
 
     @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
-    private List<TicketStatus> states;
+    private List<TicketStatus> statuses;
 
     @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
     private List<TicketMessage> messages;
