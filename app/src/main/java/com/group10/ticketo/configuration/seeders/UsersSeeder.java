@@ -23,14 +23,17 @@ public class UsersSeeder implements CommandLineRunner {
 
     private final IStatusRepository statusRepository;
 
+    private final ITicketCategoryRepository ticketCategoryRepository;
+
 
     public UsersSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
-                       IDepartmentRepository departmentRepository, IStatusRepository statusRepository) {
+                       IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.statusRepository = statusRepository;
+        this.ticketCategoryRepository = ticketCategoryRepository;
     }
 
     @Override
@@ -39,6 +42,7 @@ public class UsersSeeder implements CommandLineRunner {
         loadDepartments();
         loadUsers();
         loadStatuses();
+        loadTicketCategories();
     }
 
     private void loadUsers() {
@@ -92,6 +96,30 @@ public class UsersSeeder implements CommandLineRunner {
         status.setName(name);
         return status;
     }
+
+    private void loadTicketCategories() {
+        if (ticketCategoryRepository.count() == 0) {
+            Department soporte = departmentRepository.findByName("Soporte")
+                    .orElseThrow(() -> new RuntimeException("Soporte department not found"));
+            Department desarrollo = departmentRepository.findByName("Desarrollo")
+                    .orElseThrow(() -> new RuntimeException("Desarrollo department not found"));
+            Department administracion = departmentRepository.findByName("Administracion")
+                    .orElseThrow(() -> new RuntimeException("Administracion department not found"));
+
+            ticketCategoryRepository.save(buildCategory("Problemas técnicos", List.of(soporte)));
+            ticketCategoryRepository.save(buildCategory("Sugerencias de mejora", List.of(desarrollo, administracion)));
+            ticketCategoryRepository.save(buildCategory("Reclamos administrativos", List.of(administracion)));
+            ticketCategoryRepository.save(buildCategory("Errores del sistema", List.of(desarrollo, soporte)));
+        }
+    }
+
+    private TicketCategory buildCategory(String name, List<Department> departments) {
+        TicketCategory category = new TicketCategory();
+        category.setName(name);
+        category.setDepartments(departments);
+        return category;
+    }
+
 
     private void loadDepartments() {
         if (departmentRepository.count() == 0) {
