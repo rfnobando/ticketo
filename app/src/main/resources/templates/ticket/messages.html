@@ -25,22 +25,51 @@
           <div class="card-body">
             <h5 class="mb-3">Historial de mensajes</h5>
 
-            <div th:if="${#lists.isEmpty(messages)}" class="text-center text-muted">
-              No hay mensajes para este ticket.
-            </div>
+            <div class="chat-container mb-4">
+              <div th:if="${#lists.isEmpty(messages)}" class="text-center text-muted">
+                No hay mensajes para este ticket.
+              </div>
 
-            <!-- Mensajes en formato burbuja -->
-            <div th:each="msg : ${messages}">
-              <div class="message-wrapper">
-                <div th:class="${msg.personId} == ${customerId} ? 'chat-bubble right' : 'chat-bubble left'">
-                  <strong th:text="${msg.personName} + ' - ' + ${#temporals.format(msg.createdAt, 'dd/MM/yyyy HH:mm')}"></strong><br>
-                  <span th:text="${msg.body}">Contenido del mensaje</span>
-                  <div th:if="${msg.pictureUrl != null}" class="mt-2">
-                    <img th:src="${msg.pictureUrl}" alt="Imagen del mensaje" style="max-width: 100%; border-radius: 5px;">
+              <!-- Mensajes en formato burbuja -->
+              <div th:each="msg : ${messages}">
+                <div class="message-wrapper">
+                  <div th:class="${msg.personId} == ${customerId} ? 'chat-bubble right' : 'chat-bubble left'">
+                    <strong th:text="${msg.personName} + ' - ' + ${#temporals.format(msg.createdAt, 'dd/MM/yyyy HH:mm')}"></strong><br>
+                    <span th:text="${msg.body}">Contenido del mensaje</span>
+                    <div th:if="${msg.pictureUrl != null and !#strings.isEmpty(msg.pictureUrl)}" class="mt-2">
+                      <img th:src="${msg.pictureUrl}" alt="Imagen del mensaje" style="max-width: 100%; border-radius: 5px;">
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+
+            <hr/>
+            <form th:action="@{'/tickets/' + ${ticket.id} + '/messages'}"
+                  th:object="${ticketMessageDTO}"
+                  method="post"
+                  enctype="multipart/form-data">
+
+              <div class="form-group">
+                <label th:for="*{body}">Nuevo mensaje</label>
+                <textarea th:field="*{body}" class="form-control" rows="3"
+                          placeholder="Escribí tu mensaje acá..." required></textarea>
+                <div th:if="${#fields.hasErrors('body')}" class="text-danger" th:errors="*{body}">Error</div>
+              </div>
+
+              <div class="form-group d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-secondary" disabled title="Subir imagen (no disponible)">
+                  <i class="fas fa-image"></i> Imagen
+                </button>
+                <input type="hidden" th:field="*{pictureUrl}" />
+                <button type="submit" class="btn btn-primary ml-auto">
+                  <i class="fas fa-paper-plane"></i> Enviar
+                </button>
+              </div>
+            </form>
+
+
 
             <a href="/tickets/myTickets" class="btn btn-secondary mt-4">Volver a mis tickets</a>
           </div>
