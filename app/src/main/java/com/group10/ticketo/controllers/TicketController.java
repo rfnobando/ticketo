@@ -41,21 +41,12 @@ public class TicketController {
         this.ticketCategoryRepository = ticketCategoryRepository;
     }
 
-    @GetMapping("/customer")
+    @GetMapping("/myTickets")
     public String getCustomerTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long customerId = user.getPerson().getId();
 
-        List<Ticket> tickets = ticketService.findByCustomerId(customerId);
-
-        List<TicketDTO> ticketDTOs = tickets.stream()
-                .map(ticket -> new TicketDTO(
-                        ticket.getId(),
-                        ticket.getTitle(),
-                        ticket.getCreatedAt(),
-                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId())
-                ))
-                .toList();
+        List<TicketDTO> ticketDTOs = ticketService.findByCustomerId(customerId);
 
         model.addAttribute("tickets", ticketDTOs);
         return ViewRouteHelper.TICKET_LIST;
@@ -98,8 +89,6 @@ public class TicketController {
         dto.setCustomerId(user.getPerson().getId());
 
         ticketService.createTicket(dto);
-        return "redirect:/tickets/customer?success=true";
+        return "redirect:/tickets/myTickets?success=true";
     }
-
-
 }
