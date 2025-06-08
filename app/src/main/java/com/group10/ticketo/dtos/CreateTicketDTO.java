@@ -11,7 +11,6 @@ public class CreateTicketDTO {
     @Size(max = 100, message = "El título no puede superar los 100 caracteres.")
     private String title;
 
-    //  @NotNull(message = "Debe seleccionar un cliente.")
     private Long customerId;
 
     @NotNull(message = "Debe seleccionar una categoría.")

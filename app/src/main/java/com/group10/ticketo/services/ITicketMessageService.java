@@ -1,5 +1,6 @@
 package com.group10.ticketo.services;
 
+<<<<<<< HEAD
 import com.group10.ticketo.dtos.TicketMessageDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
@@ -23,4 +24,7 @@ public interface ITicketMessageService {
 
     //Lista de Tickets que un empleado mando mensaje
     public List<Ticket> findTicketsByEmployeeId(Long employeeId);
+=======
+public interface ITicketMessageService {
+>>>>>>> POD-39
 }

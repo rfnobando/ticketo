@@ -19,4 +19,7 @@ public interface ICustomerService {
      */
     boolean doesCustomerExist(String email);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> POD-39

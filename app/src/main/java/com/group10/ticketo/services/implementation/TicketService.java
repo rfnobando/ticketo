@@ -1,11 +1,16 @@
 package com.group10.ticketo.services.implementation;
 
+<<<<<<< HEAD
 import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.repositories.ITicketRepository;
 import com.group10.ticketo.services.ITicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+=======
+
+
+>>>>>>> POD-39
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.repositories.*;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.List;
 
 @Service
@@ -69,6 +75,25 @@ public class TicketService implements ITicketService {
     public List<Ticket> findTicketsByDepartmentId(Long departmentId){
         return ticketRepository.findTicketsByDepartmentId(departmentId);
     }
+=======
+
+@Service
+
+public class TicketService implements ITicketService {
+    @Autowired
+    private ITicketRepository ticketRepository;
+    @Autowired
+    private IStatusService statusService;
+    @Autowired
+    private ITicketStatusService ticketStatusService;
+    @Autowired
+    private ICustomerRepository customerRepository;
+    @Autowired
+    private ITicketCategoryRepository ticketCategoryRepository;
+    @Autowired
+    private ITicketMessageRepository ticketMessageRepository;
+
+>>>>>>> POD-39
     @Transactional
     public void createTicket(CreateTicketDTO createTicketDTO) throws Exception{
         if (createTicketDTO.getTitle()== null || createTicketDTO.getTitle().isEmpty() || createTicketDTO.getCustomerId() == null || createTicketDTO.getTicketCategoryId() == null ) {
@@ -98,6 +123,7 @@ public class TicketService implements ITicketService {
 
         ticketMessageRepository.save(ticketMessage);
     }
+<<<<<<< HEAD
 
     public TicketDTO findById(Long ticketId) throws Exception {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
@@ -119,4 +145,6 @@ public class TicketService implements ITicketService {
         );
         return ticket.getCustomer().getId();
     }
+=======
+>>>>>>> POD-39
 }

@@ -1,11 +1,15 @@
 package com.group10.ticketo.services;
 
 import com.group10.ticketo.dtos.CreateTicketDTO;
+<<<<<<< HEAD
 import com.group10.ticketo.dtos.TicketDTO;
+=======
+>>>>>>> POD-39
 import com.group10.ticketo.entities.Customer;
 import com.group10.ticketo.entities.Employee;
 import com.group10.ticketo.entities.TicketCategory;
 
+<<<<<<< HEAD
 import com.group10.ticketo.entities.Ticket;
 import org.springframework.data.repository.query.Param;
 
@@ -26,4 +30,8 @@ public interface ITicketService {
 
     //Trae el id de la persona que creo ticket
     Long findCustomerId (Long ticketId) throws Exception;
+=======
+public interface ITicketService {
+    void createTicket(CreateTicketDTO createTicketDTO) throws Exception;
+>>>>>>> POD-39
 }

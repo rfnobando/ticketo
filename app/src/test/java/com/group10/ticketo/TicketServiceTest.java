@@ -17,7 +17,11 @@ import static org.mockito.Mockito.*;
 
 public class TicketServiceTest {
 
+<<<<<<< HEAD
     /*@Mock
+=======
+    @Mock
+>>>>>>> POD-39
     private ITicketRepository ticketRepository;
 
     @Mock
@@ -77,5 +81,9 @@ public class TicketServiceTest {
                 ticketService.createTicket(null, customer, category));
 
         assertTrue(e.getMessage().contains("required ticket fields"));
+<<<<<<< HEAD
     }*/
+=======
+    }
+>>>>>>> POD-39
 }
