@@ -13,7 +13,7 @@
         <p th:text="${error}"></p>
     </div>
 
-    <form th:action="@{/register/form}" th:object="${customer}" method="post" class="needs-validation" novalidate>
+    <form th:action="@{/auth/register}" th:object="${customer}" method="post" class="needs-validation" novalidate>
 
         <!-- Nombre -->
         <div class="mb-3">

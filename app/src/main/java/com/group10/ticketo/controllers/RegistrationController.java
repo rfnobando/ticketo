@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/register")
+@RequestMapping("/auth")
 public class RegistrationController {
 
     private final ICustomerService customerService;
@@ -23,18 +23,20 @@ public class RegistrationController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/form")
+    @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("customer", new CustomerRegistrationDTO());
         return ViewRouteHelper.REGISTER; // nombre del HTML
     }
 
-    @PostMapping("/form")
+    @PostMapping("/register")
     public String registerCustomer(@ModelAttribute("customer") @Valid CustomerRegistrationDTO dto,
                                    BindingResult result) {
         if (result.hasErrors()) {
             return ViewRouteHelper.REGISTER;
         }
+
+        System.out.println("DTO: " + dto);
 
         // Si hay error (por ejemplo, email duplicado), se lanza la excepción y se captura globalmente
         customerService.registerCustomer(dto);
