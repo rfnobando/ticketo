@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
     .message-wrapper {
        display: flex;
@@ -29,3 +30,9 @@
        margin-left: auto;
        text-align: left;
      }
+=======
+.bg-login-image {
+    background: url('../img/bg-login-image.jpg');
+    background-size: cover;
+}
+>>>>>>> POD-39
