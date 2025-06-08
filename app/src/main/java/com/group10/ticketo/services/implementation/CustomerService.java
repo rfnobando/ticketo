@@ -61,4 +61,5 @@ public class CustomerService implements ICustomerService {
     public boolean doesCustomerExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
+
 }
