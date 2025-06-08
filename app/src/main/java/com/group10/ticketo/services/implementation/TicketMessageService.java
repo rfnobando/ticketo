@@ -14,8 +14,12 @@ import java.util.Optional;
 @Service
 public class TicketMessageService implements ITicketMessageService {
 
-    @Autowired
-    private ITicketMessageRepository ticketMessageRepository;
+
+    private final ITicketMessageRepository ticketMessageRepository;
+
+    public TicketMessageService(ITicketMessageRepository ticketMessageRepository){
+        this.ticketMessageRepository = ticketMessageRepository;
+    }
 
     @Override
     //Trae todos los mensajes por ID de ticket

@@ -22,7 +22,7 @@ public class TicketStatus  {
 
     @CreationTimestamp
     @Column(name = "created_at")
-    private LocalDateTime creationAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
@@ -37,6 +37,6 @@ public class TicketStatus  {
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee",nullable = false)
+    @JoinColumn(name = "employee",nullable = true)
     private Employee employee;
 }
