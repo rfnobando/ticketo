@@ -35,7 +35,7 @@ public class CustomerService implements ICustomerService {
         // Check if the email already exists
         if (doesCustomerExist(customerRegistrationDTO.getEmail()))
             throw new UserValidationException("Email already exists");
-        if(customerRegistrationDTO.getPassword()!= customerRegistrationDTO.getConfirmPassword())
+        if(!customerRegistrationDTO.getPassword().equals(customerRegistrationDTO.getConfirmPassword()))
             throw new UserValidationException("Passwords do not match");
         // Create a new user
         Role defaultRole = roleRepository.findByRole("ROLE_CUSTOMER")
