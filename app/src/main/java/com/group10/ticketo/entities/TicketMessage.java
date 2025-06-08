@@ -19,6 +19,7 @@ public class TicketMessage  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
     private String body;
 
     @Column(name = "picture_url")
