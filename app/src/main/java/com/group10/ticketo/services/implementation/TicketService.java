@@ -113,4 +113,10 @@ public class TicketService implements ITicketService {
 
         return dto;
     }
+    public Long findCustomerId(Long ticketId) throws Exception {
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
+                ()-> new Exception("ERROR:Ticket not found.")
+        );
+        return ticket.getCustomer().getId();
+    }
 }

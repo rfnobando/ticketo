@@ -23,4 +23,7 @@ public interface ITicketService {
 
     //Crear DTO de ticket
     TicketDTO findById(Long ticketId) throws Exception;
+
+    //Trae el id de la persona que creo ticket
+    Long findCustomerId (Long ticketId) throws Exception;
 }

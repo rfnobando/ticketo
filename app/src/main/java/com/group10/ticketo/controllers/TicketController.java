@@ -66,8 +66,10 @@ public class TicketController {
     public String getTicketMessages(@PathVariable("ticketId") Long ticketId, Model model) throws Exception {
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
+        Long customerId = ticketService.findCustomerId(ticketId);
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
+        model.addAttribute("customerId", customerId);
         return ViewRouteHelper.TICKET_MESSAGES;
     }
 

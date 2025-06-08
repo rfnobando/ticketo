@@ -29,24 +29,25 @@
               No hay mensajes para este ticket.
             </div>
 
-            <div th:each="msg : ${messages}" class="card mb-3">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">
-                  <strong th:text="${msg.personName}">Nombre</strong> -
-                  <span th:text="${#temporals.format(msg.createdAt, 'dd/MM/yyyy HH:mm')}">Fecha</span>
-                </h6>
-                <p class="card-text" th:text="${msg.body}">Contenido del mensaje</p>
-                <div th:if="${msg.pictureUrl != null}" class="mt-2">
-                  <img th:src="${msg.pictureUrl}" alt="Imagen del mensaje" style="max-width: 100%; border-radius: 5px;">
+            <!-- Mensajes en formato burbuja -->
+            <div th:each="msg : ${messages}">
+              <div class="message-wrapper">
+                <div th:class="${msg.personId} == ${customerId} ? 'chat-bubble right' : 'chat-bubble left'">
+                  <strong th:text="${msg.personName} + ' - ' + ${#temporals.format(msg.createdAt, 'dd/MM/yyyy HH:mm')}"></strong><br>
+                  <span th:text="${msg.body}">Contenido del mensaje</span>
+                  <div th:if="${msg.pictureUrl != null}" class="mt-2">
+                    <img th:src="${msg.pictureUrl}" alt="Imagen del mensaje" style="max-width: 100%; border-radius: 5px;">
+                  </div>
                 </div>
               </div>
             </div>
 
-            <a href="/tickets/myTickets" class="btn btn-secondary mt-3">Volver a mis tickets</a>
+            <a href="/tickets/myTickets" class="btn btn-secondary mt-4">Volver a mis tickets</a>
           </div>
         </div>
       </div>
     </div>
+
     <footer th:replace="~{fragments/footer :: footer}"></footer>
   </div>
 </div>
