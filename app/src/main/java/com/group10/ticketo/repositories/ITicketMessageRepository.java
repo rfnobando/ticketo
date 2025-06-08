@@ -28,4 +28,5 @@ public interface ITicketMessageRepository extends JpaRepository<TicketMessage,Lo
     //Lista de Tickets que un empleado mando mensaje
     @Query("SELECT DISTINCT m.ticket FROM TicketMessage m WHERE m.person.id = :employeeId")
     List<Ticket> findTicketsByEmployeeId(@Param("employeeId") Long employeeId);
+
 }

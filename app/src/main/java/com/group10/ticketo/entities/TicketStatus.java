@@ -37,6 +37,6 @@ public class TicketStatus  {
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee",nullable = true)
+    @JoinColumn(name = "employee_id",nullable = true)
     private Employee employee;
 }
