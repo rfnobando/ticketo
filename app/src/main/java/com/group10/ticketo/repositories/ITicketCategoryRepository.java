@@ -1,9 +1,10 @@
 package com.group10.ticketo.repositories;
+
 import com.group10.ticketo.entities.Ticket;
+import com.group10.ticketo.entities.TicketCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
 import java.io.Serializable;
 
-@Repository("ticketRepository")
-public interface ITicketRepository extends JpaRepository<Ticket, Long> {
+public interface ITicketCategoryRepository extends JpaRepository <TicketCategory, Long> {
 }
