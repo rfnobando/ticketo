@@ -1,10 +1,7 @@
 package com.group10.ticketo.configuration.seeders;
 
 import com.group10.ticketo.entities.*;
-import com.group10.ticketo.repositories.IDepartmentRepository;
-import com.group10.ticketo.repositories.IEmployeeRepository;
-import com.group10.ticketo.repositories.IRoleRepository;
-import com.group10.ticketo.repositories.IUserRepository;
+import com.group10.ticketo.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,15 +18,19 @@ public class UsersSeeder implements CommandLineRunner {
     private final IRoleRepository roleRepository;
 
     private final IEmployeeRepository employeeRepository;
+
     private final IDepartmentRepository departmentRepository;
+
+    private final IStatusRepository statusRepository;
 
 
     public UsersSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
-                       IDepartmentRepository departmentRepository) {
+                       IDepartmentRepository departmentRepository, IStatusRepository statusRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+        this.statusRepository = statusRepository;
     }
 
     @Override
@@ -37,6 +38,7 @@ public class UsersSeeder implements CommandLineRunner {
         loadRoles();
         loadDepartments();
         loadUsers();
+        loadStatuses();
     }
 
     private void loadUsers() {
@@ -76,6 +78,19 @@ public class UsersSeeder implements CommandLineRunner {
         Role role = new Role();
         role.setRole(roleType);
         return role;
+    }
+    private void loadStatuses() {
+        if (statusRepository.count() == 0) {
+            statusRepository.save(buildStatus("PENDING"));
+            statusRepository.save(buildStatus("IN_PROGRESS"));
+            statusRepository.save(buildStatus("RESOLVED"));
+            statusRepository.save(buildStatus("CLOSE"));
+        }
+    }
+    private Status buildStatus(String name) {
+        Status status = new Status();
+        status.setName(name);
+        return status;
     }
 
     private void loadDepartments() {

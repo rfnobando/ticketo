@@ -14,18 +14,18 @@ import java.util.Optional;
 public interface ITicketMessageRepository extends JpaRepository<TicketMessage,Long> {
 
     //Trae todos los mensajes por ID de ticket
-    public abstract List<TicketMessage> findByTicketId(Long ticketId);
+    List<TicketMessage> findByTicketId(Long ticketId);
 
     //Traer mensajes por ticket y ordenados por fecha
-    public abstract List<TicketMessage> findByTicketIdOrderByCreatedAtAsc(Long ticketId);
+    List<TicketMessage> findByTicketIdOrderByCreatedAtAsc(Long ticketId);
 
     //Filtrar por ticket y persona
-    public abstract List<TicketMessage> findByTicketIdAndPersonId(Long ticketId, Long personId);
+    List<TicketMessage> findByTicketIdAndPersonId(Long ticketId, Long personId);
 
     //Ultimo mensaje de un ticket
-    public abstract Optional<TicketMessage> findFirstByTicketIdOrderByCreatedAtDesc(Long ticketId);
+    Optional<TicketMessage> findFirstByTicketIdOrderByCreatedAtDesc(Long ticketId);
 
     //Lista de Tickets que un empleado mando mensaje
     @Query("SELECT DISTINCT m.ticket FROM TicketMessage m WHERE m.person.id = :employeeId")
-    public abstract List<Ticket> findTicketsByEmployeeId(@Param("employeeId") Long employeeId);
+    List<Ticket> findTicketsByEmployeeId(@Param("employeeId") Long employeeId);
 }

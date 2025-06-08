@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ITicketRepository extends JpaRepository<Ticket, Long> {
     //Trae los tickets de un cliente segun el id que le pases.
-    public abstract List<Ticket> findByCustomerId(Long customerId);
+    List<Ticket> findByCustomerId(Long customerId);
 
     @Query("SELECT t FROM Ticket t JOIN t.ticketCategory c JOIN c.departments d WHERE d.id = :departmentId")
     List<Ticket> findTicketsByDepartmentId(@Param("departmentId") Long departmentId);

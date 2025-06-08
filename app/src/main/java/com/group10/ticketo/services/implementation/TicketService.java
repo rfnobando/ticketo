@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class TicketService implements ITicketService {
 
-    @Autowired
-    private ITicketRepository ticketRepository;
+
+    private final ITicketRepository ticketRepository;
+
+    public TicketService(ITicketRepository ticketRepository){
+        this.ticketRepository = ticketRepository;
+    }
 
     @Override
     public List<Ticket> findByCustomerId(Long customerId){
