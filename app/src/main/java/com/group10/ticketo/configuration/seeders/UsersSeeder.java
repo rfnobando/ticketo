@@ -1,10 +1,7 @@
 package com.group10.ticketo.configuration.seeders;
 
 import com.group10.ticketo.entities.*;
-import com.group10.ticketo.repositories.IDepartmentRepository;
-import com.group10.ticketo.repositories.IEmployeeRepository;
-import com.group10.ticketo.repositories.IRoleRepository;
-import com.group10.ticketo.repositories.IUserRepository;
+import com.group10.ticketo.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,15 +18,22 @@ public class UsersSeeder implements CommandLineRunner {
     private final IRoleRepository roleRepository;
 
     private final IEmployeeRepository employeeRepository;
+
     private final IDepartmentRepository departmentRepository;
+
+    private final IStatusRepository statusRepository;
+
+    private final ITicketCategoryRepository ticketCategoryRepository;
 
 
     public UsersSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
-                       IDepartmentRepository departmentRepository) {
+                       IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+        this.statusRepository = statusRepository;
+        this.ticketCategoryRepository = ticketCategoryRepository;
     }
 
     @Override
@@ -37,6 +41,8 @@ public class UsersSeeder implements CommandLineRunner {
         loadRoles();
         loadDepartments();
         loadUsers();
+        loadStatuses();
+        loadTicketCategories();
     }
 
     private void loadUsers() {
@@ -77,6 +83,43 @@ public class UsersSeeder implements CommandLineRunner {
         role.setRole(roleType);
         return role;
     }
+    private void loadStatuses() {
+        if (statusRepository.count() == 0) {
+            statusRepository.save(buildStatus("PENDING"));
+            statusRepository.save(buildStatus("IN_PROGRESS"));
+            statusRepository.save(buildStatus("RESOLVED"));
+            statusRepository.save(buildStatus("CLOSE"));
+        }
+    }
+    private Status buildStatus(String name) {
+        Status status = new Status();
+        status.setName(name);
+        return status;
+    }
+
+    private void loadTicketCategories() {
+        if (ticketCategoryRepository.count() == 0) {
+            Department soporte = departmentRepository.findByName("Soporte")
+                    .orElseThrow(() -> new RuntimeException("Soporte department not found"));
+            Department desarrollo = departmentRepository.findByName("Desarrollo")
+                    .orElseThrow(() -> new RuntimeException("Desarrollo department not found"));
+            Department administracion = departmentRepository.findByName("Administracion")
+                    .orElseThrow(() -> new RuntimeException("Administracion department not found"));
+
+            ticketCategoryRepository.save(buildCategory("Problemas técnicos", List.of(soporte)));
+            ticketCategoryRepository.save(buildCategory("Sugerencias de mejora", List.of(desarrollo, administracion)));
+            ticketCategoryRepository.save(buildCategory("Reclamos administrativos", List.of(administracion)));
+            ticketCategoryRepository.save(buildCategory("Errores del sistema", List.of(desarrollo, soporte)));
+        }
+    }
+
+    private TicketCategory buildCategory(String name, List<Department> departments) {
+        TicketCategory category = new TicketCategory();
+        category.setName(name);
+        category.setDepartments(departments);
+        return category;
+    }
+
 
     private void loadDepartments() {
         if (departmentRepository.count() == 0) {

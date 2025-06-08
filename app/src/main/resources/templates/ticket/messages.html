@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head('Mensajes del Ticket')}">
+  <title>Mensajes del Ticket</title>
+</head>
+<body id="page-top">
+<div id="wrapper">
+  <ul th:replace="~{fragments/sidebar :: sidebar}"></ul>
+
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <nav th:replace="~{fragments/topbar :: topbar}"></nav>
+
+      <div class="container-fluid">
+        <h1 class="h3 mb-4 text-gray-800">Mensajes del Ticket</h1>
+
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary" th:text="'Ticket: ' + ${ticket.title}">Título del ticket</h6>
+            <p class="mb-0"><strong>Estado:</strong> <span th:text="${ticket.currentStatus}"></span></p>
+            <p class="mb-0"><strong>Creado:</strong> <span th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <p class="mb-0"><strong>Actualizado:</strong> <span th:text="${#temporals.format(ticket.updatedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+          </div>
+
+          <div class="card-body">
+            <h5 class="mb-3">Historial de mensajes</h5>
+
+            <div th:if="${#lists.isEmpty(messages)}" class="text-center text-muted">
+              No hay mensajes para este ticket.
+            </div>
+
+            <!-- Mensajes en formato burbuja -->
+            <div th:each="msg : ${messages}">
+              <div class="message-wrapper">
+                <div th:class="${msg.personId} == ${customerId} ? 'chat-bubble right' : 'chat-bubble left'">
+                  <strong th:text="${msg.personName} + ' - ' + ${#temporals.format(msg.createdAt, 'dd/MM/yyyy HH:mm')}"></strong><br>
+                  <span th:text="${msg.body}">Contenido del mensaje</span>
+                  <div th:if="${msg.pictureUrl != null}" class="mt-2">
+                    <img th:src="${msg.pictureUrl}" alt="Imagen del mensaje" style="max-width: 100%; border-radius: 5px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a href="/tickets/myTickets" class="btn btn-secondary mt-4">Volver a mis tickets</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </div>
+</div>
+
+<a th:replace="~{fragments/utils :: scrollToTop}"></a>
+<div th:replace="~{fragments/utils :: logoutModal}"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>
