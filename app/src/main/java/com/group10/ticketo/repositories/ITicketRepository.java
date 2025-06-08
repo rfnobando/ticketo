@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.io.Serializable;
 import java.util.List;
 
-<<<<<<< HEAD
 @Repository
 public interface ITicketRepository extends JpaRepository<Ticket, Long> {
     //Trae los tickets de un cliente segun el id que le pases.
@@ -15,8 +14,4 @@ public interface ITicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("SELECT t FROM Ticket t JOIN t.ticketCategory c JOIN c.departments d WHERE d.id = :departmentId")
     List<Ticket> findTicketsByDepartmentId(@Param("departmentId") Long departmentId);
-=======
-@Repository("ticketRepository")
-public interface ITicketRepository extends JpaRepository<Ticket, Long> {
->>>>>>> POD-39
 }

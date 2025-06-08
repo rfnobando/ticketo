@@ -1,6 +1,5 @@
 package com.group10.ticketo.services.implementation;
 
-<<<<<<< HEAD
 import com.group10.ticketo.dtos.TicketMessageDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
@@ -56,11 +55,5 @@ public class TicketMessageService implements ITicketMessageService {
     public List<Ticket> findTicketsByEmployeeId(Long employeeId){
         return ticketMessageRepository.findTicketsByEmployeeId(employeeId);
     }
-=======
-import com.group10.ticketo.services.ITicketMessageService;
-import org.springframework.stereotype.Service;
 
-@Service
-public class TicketMessageService implements ITicketMessageService {
->>>>>>> POD-39
 }

@@ -1,47 +1,28 @@
 package com.group10.ticketo.services.implementation;
 
-<<<<<<< HEAD
+import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
+import com.group10.ticketo.entities.Customer;
 import com.group10.ticketo.entities.Ticket;
+import com.group10.ticketo.entities.TicketCategory;
+import com.group10.ticketo.entities.TicketMessage;
 import com.group10.ticketo.repositories.ITicketRepository;
 import com.group10.ticketo.services.ITicketService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-=======
-
-
->>>>>>> POD-39
-import com.group10.ticketo.dtos.CreateTicketDTO;
-import com.group10.ticketo.entities.*;
-import com.group10.ticketo.repositories.*;
-import com.group10.ticketo.services.ICustomerService;
-import com.group10.ticketo.services.IStatusService;
-import com.group10.ticketo.services.ITicketService;
-import com.group10.ticketo.services.ITicketStatusService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-<<<<<<< HEAD
+import com.group10.ticketo.repositories.*;
+import com.group10.ticketo.services.IStatusService;
+import com.group10.ticketo.services.ITicketStatusService;
 import java.util.List;
 
 @Service
 public class TicketService implements ITicketService {
 
-
     private final ITicketRepository ticketRepository;
-
     private final IStatusService statusService;
-
     private final ITicketStatusService ticketStatusService;
-
     private final ICustomerRepository customerRepository;
-
     private final ITicketCategoryRepository ticketCategoryRepository;
-
     private final ITicketMessageRepository ticketMessageRepository;
 
     public TicketService(ITicketRepository ticketRepository, IStatusService statusService,
@@ -53,12 +34,10 @@ public class TicketService implements ITicketService {
         this.customerRepository = customerRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
         this.ticketMessageRepository = ticketMessageRepository;
-
     }
 
     @Override
     public List<TicketDTO> findByCustomerId(Long customerId){
-
         List<Ticket> tickets = ticketRepository.findByCustomerId(customerId);
 
         return tickets.stream()
@@ -71,29 +50,13 @@ public class TicketService implements ITicketService {
                 ))
                 .toList();
     }
+
     @Override
     public List<Ticket> findTicketsByDepartmentId(Long departmentId){
         return ticketRepository.findTicketsByDepartmentId(departmentId);
     }
-=======
 
-@Service
-
-public class TicketService implements ITicketService {
-    @Autowired
-    private ITicketRepository ticketRepository;
-    @Autowired
-    private IStatusService statusService;
-    @Autowired
-    private ITicketStatusService ticketStatusService;
-    @Autowired
-    private ICustomerRepository customerRepository;
-    @Autowired
-    private ITicketCategoryRepository ticketCategoryRepository;
-    @Autowired
-    private ITicketMessageRepository ticketMessageRepository;
-
->>>>>>> POD-39
+    @Override
     @Transactional
     public void createTicket(CreateTicketDTO createTicketDTO) throws Exception{
         if (createTicketDTO.getTitle()== null || createTicketDTO.getTitle().isEmpty() || createTicketDTO.getCustomerId() == null || createTicketDTO.getTicketCategoryId() == null ) {
@@ -123,7 +86,6 @@ public class TicketService implements ITicketService {
 
         ticketMessageRepository.save(ticketMessage);
     }
-<<<<<<< HEAD
 
     public TicketDTO findById(Long ticketId) throws Exception {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
@@ -139,12 +101,12 @@ public class TicketService implements ITicketService {
 
         return dto;
     }
+
     public Long findCustomerId(Long ticketId) throws Exception {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
-                ()-> new Exception("ERROR:Ticket not found.")
+                () -> new Exception("ERROR:Ticket not found.")
         );
         return ticket.getCustomer().getId();
     }
-=======
->>>>>>> POD-39
+
 }
