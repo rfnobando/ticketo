@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class UsersSeeder implements CommandLineRunner {
@@ -54,7 +53,7 @@ public class UsersSeeder implements CommandLineRunner {
         User user = User.builder()
                 .email(email)
                 .password(encryptPassword(password))
-                .roles(List.of(roleRepository.findByRole("ADMIN").orElseThrow(() -> new RuntimeException("Admin role not found"))))
+                .roles(List.of(roleRepository.findByRole("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Admin role not found"))))
                 .build();
         userRepository.save(user);
         Employee employee = new Employee();
@@ -68,8 +67,8 @@ public class UsersSeeder implements CommandLineRunner {
 
     private void loadRoles() {
         if (roleRepository.count() == 0) {
-            roleRepository.save(buildRole("USER"));
-            roleRepository.save(buildRole("ADMIN"));
+            roleRepository.save(buildRole("ROLE_ADMIN"));
+            roleRepository.save(buildRole("ROLE_CUSTOMER"));
         }
     }
 

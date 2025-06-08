@@ -23,14 +23,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Long id;
+
     @NotBlank
     @Email
     private String email;
+
     @NotBlank
     private String password;
 
@@ -53,7 +54,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole()))
+                .filter(role -> role.getPermissions() != null)
+                .flatMap(role -> role.getPermissions().stream())
+                .filter(permission -> permission != null && permission.getPermission() != null && !permission.getPermission().isBlank())
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
     }
 
@@ -76,5 +80,4 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
 }

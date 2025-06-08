@@ -1,12 +1,10 @@
 package com.group10.ticketo.repositories;
 
 import com.group10.ticketo.entities.User;
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
