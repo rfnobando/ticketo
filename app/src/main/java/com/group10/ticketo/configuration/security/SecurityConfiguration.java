@@ -24,16 +24,28 @@ public class SecurityConfiguration {
     public SecurityConfiguration(UserService userService) {
         this.userService = userService;
     }
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/css/*", "/imgs/*", "/js/*", "/vendor/bootstrap/css/*",
-                            "/vendor/jquery/*", "/vendor/bootstrap/js/*").permitAll();
-                    auth.requestMatchers("/auth/login", "/auth/loginProcess", "/auth/loginSuccess", "/auth/logout", "/auth/register").permitAll();
-
+                    auth.requestMatchers(
+                            "/css/**",
+                            "/img/**",
+                            "/js/**",
+                            "/libs/**",
+                            "/vendor/**",
+                            "/webjars/**"
+                    ).permitAll();
+                    auth.requestMatchers(
+                            "/auth/login",
+                            "/auth/loginProcess",
+                            "/auth/loginSuccess",
+                            "/auth/logout",
+                            "/auth/register"
+                    ).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(login -> {

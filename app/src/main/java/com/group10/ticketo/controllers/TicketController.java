@@ -6,38 +6,29 @@ import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.dtos.TicketMessageDTO;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
-import com.group10.ticketo.repositories.ICustomerRepository;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
-import com.group10.ticketo.repositories.ITicketStatusRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
-import com.group10.ticketo.services.ITicketStatusService;
-import jakarta.validation.Valid;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.validation.Valid;
 
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/tickets")
 public class TicketController {
     private final ITicketService ticketService;
     private final ITicketMessageService ticketMessageService;
-    private final ITicketStatusService ticketStatusService;
-    private final ICustomerRepository customerRepository;
     private final ITicketCategoryRepository ticketCategoryRepository;
 
-    public TicketController(ITicketService ticketService, ITicketMessageService ticketMessageService, ITicketStatusService ticketStatusService,
-                            ICustomerRepository customerRepository,ITicketCategoryRepository ticketCategoryRepository) {
+    public TicketController(ITicketService ticketService, ITicketMessageService ticketMessageService,
+                            ITicketCategoryRepository ticketCategoryRepository) {
         this.ticketService = ticketService;
         this.ticketMessageService = ticketMessageService;
-        this.ticketStatusService = ticketStatusService;
-        this.customerRepository = customerRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
     }
 

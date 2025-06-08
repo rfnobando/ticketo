@@ -11,3 +11,4 @@ import java.util.List;
 public interface ITicketStatusRepository extends JpaRepository<TicketStatus, Long> {
     List<TicketStatus> findByTicketIdOrderByCreatedAtDesc(Long ticketId, Pageable pageable);
 }
+
