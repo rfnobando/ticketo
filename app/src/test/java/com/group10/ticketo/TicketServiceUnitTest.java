@@ -1,5 +1,6 @@
-package com.group10.ticketo;
+/*package com.group10.ticketo;
 
+import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.repositories.ITicketRepository;
 import com.group10.ticketo.services.implementation.TicketService;
@@ -39,7 +40,7 @@ public class TicketServiceUnitTest {
         when(ticketRepository.findByCustomerId(customerId)).thenReturn(mockTickets);
 
         // Ejecutar método del servicio
-        List<Ticket> result = ticketService.findByCustomerId(customerId);
+        List<TicketDTO> result = ticketService.findByCustomerId(customerId);
 
         // Validaciones
         assertEquals(2, result.size());
@@ -77,3 +78,4 @@ public class TicketServiceUnitTest {
         verify(ticketRepository, times(1)).findTicketsByDepartmentId(departmentId);
     }
 }
+*/

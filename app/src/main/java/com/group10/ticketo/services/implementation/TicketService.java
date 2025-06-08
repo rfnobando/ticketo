@@ -66,8 +66,18 @@ public class TicketService implements ITicketService {
                 .toList();
     }
     @Override
-    public List<Ticket> findTicketsByDepartmentId(Long departmentId){
-        return ticketRepository.findTicketsByDepartmentId(departmentId);
+    public List<TicketDTO> findTicketsByDepartmentId(Long departmentId) {
+        List<Ticket> tickets = ticketRepository.findTicketsByDepartmentId(departmentId);
+
+        return tickets.stream()
+                .map(ticket -> new TicketDTO(
+                        ticket.getId(),
+                        ticket.getTitle(),
+                        ticket.getCreatedAt(),
+                        ticket.getUpdatedAt(),
+                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId())
+                ))
+                .toList();
     }
     @Transactional
     public void createTicket(CreateTicketDTO createTicketDTO) throws Exception{

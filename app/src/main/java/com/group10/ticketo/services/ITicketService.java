@@ -15,8 +15,7 @@ public interface ITicketService {
     //Traer Lista de Tickets creados por un cliente
     List<TicketDTO> findByCustomerId(Long customerId);
 
-    //Traer Lista de Tickets de un Departamento
-    List<Ticket> findTicketsByDepartmentId(Long departmentId);
+    List<TicketDTO> findTicketsByDepartmentId(Long departmentId);
 
     //Crear Ticket que viene del controller
     void createTicket(CreateTicketDTO createTicketDTO) throws Exception;
