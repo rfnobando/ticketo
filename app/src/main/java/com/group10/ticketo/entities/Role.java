@@ -23,7 +23,7 @@ public class Role  {
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Permission.class)
     @JoinTable(
             name = "roles_permissions", // Nombre de la tabla de unión
             joinColumns = @JoinColumn(name = "role_id"),
