@@ -3,9 +3,7 @@ package com.group10.ticketo.controllers;
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.dtos.TicketMessageDTO;
-import com.group10.ticketo.entities.Ticket;
-import com.group10.ticketo.entities.TicketMessage;
-import com.group10.ticketo.entities.User;
+import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.repositories.ICustomerRepository;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
@@ -94,5 +92,22 @@ public class TicketController {
 
         ticketService.createTicket(dto);
         return "redirect:/tickets/myTickets?success=true";
+    }
+
+    @GetMapping("/myDepartamentTickets")
+    public String getDepartmentTickets(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = user.getPerson();
+
+        if (person instanceof Employee) {
+            Employee employee = (Employee) person;
+            Long departmentId = employee.getDepartment().getId();
+            List<TicketDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
+
+            model.addAttribute("tickets", tickets);
+            return ViewRouteHelper.TICKET_LIST_DEPARTMENT;
+        }
+
+        return "redirect:/?error=not_authorized";
     }
 }
