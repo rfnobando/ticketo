@@ -10,7 +10,6 @@ import com.group10.ticketo.helpers.ViewRouteHelper;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-    // This controller will handle authentication-related requests
 
     @GetMapping("/login")
     public String login(Model model,
@@ -21,10 +20,10 @@ public class AuthController {
         return ViewRouteHelper.USER_LOGIN;
     }
 
-
-    //GET auth/loginSuccess --> Return the view in path home/index if login is successful
+    //Se pueden extraer los permisos de la configuracion de seguridad
+    // y redirigir donde sea mas conveniente segun el rol o permisos del usuario.
     @GetMapping("/loginSuccess")
     public String loginCheck() {
-        return ViewRouteHelper.INDEX;
+        return "redirect:/";
     }
 }
