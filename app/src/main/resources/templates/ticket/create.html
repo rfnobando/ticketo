@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head('Crear Ticket')}">
+    <title>Crear Ticket</title>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <ul th:replace="~{fragments/sidebar :: sidebar}"></ul>
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="~{fragments/topbar :: topbar}"></nav>
+
+            <div class="container-fluid">
+                <h1 class="h3 mb-4 text-gray-800">Crear Nuevo Ticket</h1>
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <form th:action="@{/tickets/create}" method="post" th:object="${ticketDTO}">
+                            <div class="form-group">
+                                <label for="title">Título</label>
+                                <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Ingrese un título" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ticketCategoryId">Categoría</label>
+                                <select class="form-control" id="ticketCategoryId" th:field="*{ticketCategoryId}" required>
+                                    <option value="" disabled selected>Seleccione una categoría</option>
+                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="messageBody">Mensaje</label>
+                                <textarea class="form-control" id="messageBody" th:field="*{messageBody}" rows="4" placeholder="Escriba el mensaje del ticket" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pictureUrl">Subir imagen (simulado)</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="pictureUrl" disabled>
+                                    <label class="custom-file-label" for="pictureUrl">Elegir archivo (no funcional)</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Crear Ticket</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="~{fragments/footer :: footer}"></footer>
+    </div>
+</div>
+
+<a th:replace="~{fragments/utils :: scrollToTop}"></a>
+<div th:replace="~{fragments/utils :: logoutModal}"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>
