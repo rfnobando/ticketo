@@ -1,10 +1,10 @@
 package com.group10.ticketo.controllers;
 
 import com.group10.ticketo.dtos.CreateTicketDTO;
+import com.group10.ticketo.dtos.CreateTicketMessageDTO;
 import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.dtos.TicketMessageDTO;
-import com.group10.ticketo.entities.Ticket;
-import com.group10.ticketo.entities.User;
+import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
 import com.group10.ticketo.services.ITicketMessageService;
@@ -43,6 +43,7 @@ public class TicketController {
         return ViewRouteHelper.TICKET_LIST;
     }
 
+
     @GetMapping("/employee")
     public String getEmployeeTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -60,7 +61,23 @@ public class TicketController {
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
         model.addAttribute("customerId", customerId);
+        model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
         return ViewRouteHelper.TICKET_MESSAGES;
+    }
+    @PostMapping("/{ticketId}/messages")
+    public String createTicketMessage(@PathVariable("ticketId") Long ticketId, @ModelAttribute("ticketMessageDTO") @Valid CreateTicketMessageDTO dto,
+                                      BindingResult result, Model model) throws Exception {
+        if (result.hasErrors()) {
+            model.addAttribute("categories",ticketCategoryRepository.findAll());
+            return ViewRouteHelper.TICKET_CREATE_TICKET;
+        }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        dto.setPersonId(user.getPerson().getId());
+        dto.setTicketId(ticketId);
+
+        ticketMessageService.createTicketMessage(dto);
+
+        return "redirect:/tickets/{ticketId}/messages";
     }
 
     @GetMapping("/create")
