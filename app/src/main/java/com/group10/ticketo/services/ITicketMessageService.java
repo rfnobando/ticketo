@@ -1,5 +1,6 @@
 package com.group10.ticketo.services;
 
+import com.group10.ticketo.dtos.TicketMessageDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public interface ITicketMessageService {
     //Trae todos los mensajes por ID de ticket
-    public List<TicketMessage> findByTicketId(Long ticketId);
+    public List<TicketMessageDTO> findByTicketId(Long ticketId);
 
     //Traer mensajes por ticket y ordenados por fecha
     public List<TicketMessage> findByTicketIdOrderByCreatedAtAsc(Long ticketId);

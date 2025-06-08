@@ -13,11 +13,14 @@ import java.util.List;
 
 public interface ITicketService {
     //Traer Lista de Tickets creados por un cliente
-    public List<TicketDTO> findByCustomerId(Long customerId);
+    List<TicketDTO> findByCustomerId(Long customerId);
 
     //Traer Lista de Tickets de un Departamento
-    public List<Ticket> findTicketsByDepartmentId(Long departmentId);
+    List<Ticket> findTicketsByDepartmentId(Long departmentId);
 
     //Crear Ticket que viene del controller
     void createTicket(CreateTicketDTO createTicketDTO) throws Exception;
+
+    //Crear DTO de ticket
+    TicketDTO findById(Long ticketId) throws Exception;
 }

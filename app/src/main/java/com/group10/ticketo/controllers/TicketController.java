@@ -2,6 +2,7 @@ package com.group10.ticketo.controllers;
 
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
+import com.group10.ticketo.dtos.TicketMessageDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
 import com.group10.ticketo.entities.User;
@@ -62,10 +63,11 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}/messages")
-    public String getTicketMessages(@PathVariable("ticketId") Long ticketId, Model model) {
-        List<TicketMessage> messages = ticketMessageService.findByTicketIdOrderByCreatedAtAsc(ticketId);
+    public String getTicketMessages(@PathVariable("ticketId") Long ticketId, Model model) throws Exception {
+        List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
+        TicketDTO ticketDTO = ticketService.findById(ticketId);
         model.addAttribute("messages", messages);
-        model.addAttribute("ticketId", ticketId);
+        model.addAttribute("ticket", ticketDTO);
         return ViewRouteHelper.TICKET_MESSAGES;
     }
 
