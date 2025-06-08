@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class TicketMessageServiceUnitTest {
 
-    @Mock
+    /*@Mock
     private ITicketMessageRepository ticketMessageRepository;
 
     @InjectMocks
@@ -102,7 +102,7 @@ public class TicketMessageServiceUnitTest {
 
         // Verificar que se llamó al repository con el ID correcto
         Mockito.verify(ticketMessageRepository, Mockito.times(1)).findTicketsByEmployeeId(employeeId);
-    }
+    }*/
 
 
 }

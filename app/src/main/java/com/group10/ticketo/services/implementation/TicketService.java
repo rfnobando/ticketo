@@ -98,4 +98,19 @@ public class TicketService implements ITicketService {
 
         ticketMessageRepository.save(ticketMessage);
     }
+
+    public TicketDTO findById(Long ticketId) throws Exception {
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
+                ()-> new Exception("ERROR:Ticket not found.")
+        );
+        TicketDTO dto = new TicketDTO();
+
+        dto.setId(ticket.getId());
+        dto.setTitle(ticket.getTitle());
+        dto.setCreatedAt(ticket.getCreatedAt());
+        dto.setUpdatedAt(ticket.getUpdatedAt());
+        dto.setCurrentStatus(ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId()));
+
+        return dto;
+    }
 }
