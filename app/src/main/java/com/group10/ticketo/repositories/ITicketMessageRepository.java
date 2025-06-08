@@ -1,6 +1,5 @@
 package com.group10.ticketo.repositories;
 
-<<<<<<< HEAD
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,10 +28,5 @@ public interface ITicketMessageRepository extends JpaRepository<TicketMessage,Lo
     //Lista de Tickets que un empleado mando mensaje
     @Query("SELECT DISTINCT m.ticket FROM TicketMessage m WHERE m.person.id = :employeeId")
     List<Ticket> findTicketsByEmployeeId(@Param("employeeId") Long employeeId);
-=======
-import com.group10.ticketo.entities.TicketMessage;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ITicketMessageRepository extends JpaRepository<TicketMessage,Long> {
->>>>>>> POD-39
 }

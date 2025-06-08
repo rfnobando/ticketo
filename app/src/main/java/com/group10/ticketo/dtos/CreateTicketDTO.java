@@ -23,4 +23,5 @@ public class CreateTicketDTO {
     @Size(max = 255, message = "La URL de la imagen es demasiado larga.")
     private String pictureUrl;
 
+
 }
