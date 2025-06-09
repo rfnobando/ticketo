@@ -1,14 +1,15 @@
 package com.group10.ticketo.controllers;
 
-import com.group10.ticketo.dtos.CreateTicketDTO;
-import com.group10.ticketo.dtos.CreateTicketMessageDTO;
-import com.group10.ticketo.dtos.TicketDTO;
-import com.group10.ticketo.dtos.TicketMessageDTO;
+import com.group10.ticketo.dtos.*;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
+import com.group10.ticketo.repositories.ICustomerRepository;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
+import com.group10.ticketo.repositories.ITicketStatusRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
+import com.group10.ticketo.services.ITicketStatusService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/tickets")
@@ -101,5 +103,22 @@ public class TicketController {
 
         ticketService.createTicket(dto);
         return "redirect:/tickets/myTickets?success=true";
+    }
+
+    @GetMapping("/myDepartamentTickets")
+    public String getDepartmentTickets(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = user.getPerson();
+
+        if (person instanceof Employee) {
+            Employee employee = (Employee) person;
+            Long departmentId = employee.getDepartment().getId();
+            List<TicketWithCategoryDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
+
+            model.addAttribute("tickets", tickets);
+            return ViewRouteHelper.TICKET_LIST_DEPARTMENT;
+        }
+
+        return "redirect:/?error=not_authorized";
     }
 }
