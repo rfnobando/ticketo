@@ -3,6 +3,7 @@ package com.group10.ticketo.controllers;
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.dtos.TicketMessageDTO;
+import com.group10.ticketo.dtos.TicketWithCategoryDTO;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.repositories.ICustomerRepository;
@@ -102,7 +103,7 @@ public class TicketController {
         if (person instanceof Employee) {
             Employee employee = (Employee) person;
             Long departmentId = employee.getDepartment().getId();
-            List<TicketDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
+            List<TicketWithCategoryDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
 
             model.addAttribute("tickets", tickets);
             return ViewRouteHelper.TICKET_LIST_DEPARTMENT;
