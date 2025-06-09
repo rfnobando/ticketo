@@ -1,9 +1,15 @@
 package com.group10.ticketo.services.implementation;
 
+import com.group10.ticketo.dtos.CreateTicketMessageDTO;
 import com.group10.ticketo.dtos.TicketMessageDTO;
+import com.group10.ticketo.entities.Employee;
+import com.group10.ticketo.entities.Person;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketMessage;
+import com.group10.ticketo.repositories.IPersonRepository;
 import com.group10.ticketo.repositories.ITicketMessageRepository;
+import com.group10.ticketo.repositories.ITicketRepository;
+import com.group10.ticketo.services.IMailService;
 import com.group10.ticketo.services.ITicketMessageService;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +21,16 @@ public class TicketMessageService implements ITicketMessageService {
 
 
     private final ITicketMessageRepository ticketMessageRepository;
+    private final ITicketRepository ticketRepository;
+    private final IPersonRepository personRepository;
+    private final IMailService mailService;
 
-    public TicketMessageService(ITicketMessageRepository ticketMessageRepository){
+    public TicketMessageService(ITicketMessageRepository ticketMessageRepository, ITicketRepository ticketRepository,
+                                IPersonRepository personRepository, IMailService mailService){
         this.ticketMessageRepository = ticketMessageRepository;
+        this.ticketRepository = ticketRepository;
+        this.personRepository = personRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -55,4 +68,34 @@ public class TicketMessageService implements ITicketMessageService {
     public List<Ticket> findTicketsByEmployeeId(Long employeeId){
         return ticketMessageRepository.findTicketsByEmployeeId(employeeId);
     }
+
+    @Override
+    public void createTicketMessage(CreateTicketMessageDTO createTicketMessageDTO) throws Exception {
+        if (createTicketMessageDTO.getBody() == null || createTicketMessageDTO.getBody().isEmpty() ||
+                createTicketMessageDTO.getTicketId() == null ||
+                createTicketMessageDTO.getPersonId() == null) {
+            throw new Exception("ERROR: Some required ticket message fields are missing");
+        }
+
+        Ticket ticket = ticketRepository.findById(createTicketMessageDTO.getTicketId()).orElseThrow(
+                ()-> new Exception("ERROR: Ticket not found."));
+
+        Person person = personRepository.findById(createTicketMessageDTO.getPersonId()).orElseThrow(
+                () -> new Exception("ERROR: Person not found")
+        );
+
+        TicketMessage ticketMessage = new TicketMessage();
+        ticketMessage.setTicket(ticket);
+        ticketMessage.setBody(createTicketMessageDTO.getBody());
+        ticketMessage.setPerson(person);
+        ticketMessage.setPictureUrl(createTicketMessageDTO.getPictureUrl());
+
+        ticketMessageRepository.save(ticketMessage);
+
+        if(person instanceof Employee){
+            mailService.sendTicketMessageToClient(ticketMessage);
+        }
+
+    }
+
 }

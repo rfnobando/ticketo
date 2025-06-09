@@ -1,9 +1,6 @@
 package com.group10.ticketo.controllers;
 
-import com.group10.ticketo.dtos.CreateTicketDTO;
-import com.group10.ticketo.dtos.TicketDTO;
-import com.group10.ticketo.dtos.TicketMessageDTO;
-import com.group10.ticketo.dtos.TicketWithCategoryDTO;
+import com.group10.ticketo.dtos.*;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.repositories.ICustomerRepository;
@@ -18,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -28,16 +25,12 @@ import java.util.List;
 public class TicketController {
     private final ITicketService ticketService;
     private final ITicketMessageService ticketMessageService;
-    private final ITicketStatusService ticketStatusService;
-    private final ICustomerRepository customerRepository;
     private final ITicketCategoryRepository ticketCategoryRepository;
 
-    public TicketController(ITicketService ticketService, ITicketMessageService ticketMessageService, ITicketStatusService ticketStatusService,
-                            ICustomerRepository customerRepository,ITicketCategoryRepository ticketCategoryRepository) {
+    public TicketController(ITicketService ticketService, ITicketMessageService ticketMessageService,
+                            ITicketCategoryRepository ticketCategoryRepository) {
         this.ticketService = ticketService;
         this.ticketMessageService = ticketMessageService;
-        this.ticketStatusService = ticketStatusService;
-        this.customerRepository = customerRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
     }
 
@@ -51,6 +44,7 @@ public class TicketController {
         model.addAttribute("tickets", ticketDTOs);
         return ViewRouteHelper.TICKET_LIST;
     }
+
 
     @GetMapping("/employee")
     public String getEmployeeTickets(Model model) {
@@ -69,7 +63,23 @@ public class TicketController {
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
         model.addAttribute("customerId", customerId);
+        model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
         return ViewRouteHelper.TICKET_MESSAGES;
+    }
+    @PostMapping("/{ticketId}/messages")
+    public String createTicketMessage(@PathVariable("ticketId") Long ticketId, @ModelAttribute("ticketMessageDTO") @Valid CreateTicketMessageDTO dto,
+                                      BindingResult result, Model model) throws Exception {
+        if (result.hasErrors()) {
+            model.addAttribute("categories",ticketCategoryRepository.findAll());
+            return ViewRouteHelper.TICKET_CREATE_TICKET;
+        }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        dto.setPersonId(user.getPerson().getId());
+        dto.setTicketId(ticketId);
+
+        ticketMessageService.createTicketMessage(dto);
+
+        return "redirect:/tickets/{ticketId}/messages";
     }
 
     @GetMapping("/create")
