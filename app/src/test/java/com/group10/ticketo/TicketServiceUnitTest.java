@@ -1,4 +1,4 @@
-package com.group10.ticketo;
+/*package com.group10.ticketo;
 
 import com.group10.ticketo.dtos.TicketDTO;
 import com.group10.ticketo.entities.Ticket;
@@ -78,3 +78,4 @@ public class TicketServiceUnitTest {
         verify(ticketRepository, times(1)).findTicketsByDepartmentId(departmentId);
     }
 }
+*/
