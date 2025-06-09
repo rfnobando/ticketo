@@ -28,13 +28,13 @@
             Secciones
         </div>
         <!-- Nav Item -->
-        <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+        <li class="nav-item">
             <a class="nav-link" href="/tickets/myDepartamentTickets">
                 <i class="fas fa-fw fa-envelope-open-text"></i>
                 <span>Ver Tickets</span></a>
         </li>
         <!-- Nav Item -->
-        <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_CUSTOMER'')')}">
+        <li class="nav-item">
             <a class="nav-link" href="/tickets/myTickets">
                 <i class="fas fa-fw fa-envelope-open-text"></i>
                 <span>Mis Tickets</span></a>
