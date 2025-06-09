@@ -44,6 +44,36 @@ Para comenzar, clonar este repositorio:
 ```bash
 git clone https://github.com/rfnobando/ticketo.git
 ```
+Luego, crear la base de datos
+Antes de ejecutar la aplicación, asegurate de tener MySQL instalado y ejecutándose. Luego, creá la base de datos "ticketo" ejecutando el siguiente comando:
+```bash
+CREATE DATABASE ticketo;
+```
+
+Una vez abierto en programa, instalar el plugin de Lombok
+El proyecto utiliza Lombok para simplificar el código Java (getters, setters, etc.), por lo tanto es necesario que el plugin esté instalado en tu IDE.
+
+👉 En IntelliJ IDEA:
+Ir a File > Settings > Plugins.
+
+Buscar Lombok e instalarlo.
+
+Reiniciar el IDE si es necesario.
+
+Verificar que el procesador de anotaciones esté habilitado en Settings > Build, Execution, Deployment > Compiler > Annotation Processors.
+
+👉 En Eclipse:
+Descargar el archivo .jar desde https://projectlombok.org.
+
+Ejecutarlo y seleccioná la instalación de Eclipse.
+
+Reiniciá Eclipse.
+
+Y por ultimo, Para que la aplicación funcione correctamente, es necesario definir las siguientes variables de entorno:
+```bash
+(POR SEGURIDAD) EN LA CARPPETA DE DRIVE DE LA PRIMER ENTREGA DE SPRING, LLAMADA VARIABLES DE ENTORNO ENCONTRARAN LAS CLAVES ;
+```
+
 ## Funcionalidades 
 
 ### Cliente
