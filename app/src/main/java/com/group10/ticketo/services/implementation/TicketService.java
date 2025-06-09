@@ -1,6 +1,7 @@
 package com.group10.ticketo.services.implementation;
 
 import com.group10.ticketo.dtos.TicketDTO;
+import com.group10.ticketo.dtos.TicketWithCategoryDTO;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.repositories.ITicketRepository;
 import com.group10.ticketo.services.ITicketService;
@@ -66,16 +67,17 @@ public class TicketService implements ITicketService {
                 .toList();
     }
     @Override
-    public List<TicketDTO> findTicketsByDepartmentId(Long departmentId) {
+    public List<TicketWithCategoryDTO> findTicketsByDepartmentId(Long departmentId) {
         List<Ticket> tickets = ticketRepository.findTicketsByDepartmentId(departmentId);
 
         return tickets.stream()
-                .map(ticket -> new TicketDTO(
+                .map(ticket -> new TicketWithCategoryDTO(
                         ticket.getId(),
                         ticket.getTitle(),
                         ticket.getCreatedAt(),
                         ticket.getUpdatedAt(),
-                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId())
+                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId()),
+                        ticket.getTicketCategory().getName()
                 ))
                 .toList();
     }

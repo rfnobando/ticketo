@@ -2,6 +2,7 @@ package com.group10.ticketo.services;
 
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
+import com.group10.ticketo.dtos.TicketWithCategoryDTO;
 import com.group10.ticketo.entities.Customer;
 import com.group10.ticketo.entities.Employee;
 import com.group10.ticketo.entities.TicketCategory;
@@ -15,7 +16,7 @@ public interface ITicketService {
     //Traer Lista de Tickets creados por un cliente
     List<TicketDTO> findByCustomerId(Long customerId);
 
-    List<TicketDTO> findTicketsByDepartmentId(Long departmentId);
+    public List<TicketWithCategoryDTO> findTicketsByDepartmentId(Long departmentId);
 
     //Crear Ticket que viene del controller
     void createTicket(CreateTicketDTO createTicketDTO) throws Exception;

@@ -2,6 +2,7 @@ package com.group10.ticketo.configuration.seeders;
 
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.repositories.*;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -9,22 +10,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@Transactional // ✔ Agregado para evitar LazyInitializationException
 public class UsersSeeder implements CommandLineRunner {
 
     private static final String passwordGeneric = "1234567";
 
     private final IUserRepository userRepository;
-
     private final IRoleRepository roleRepository;
-
     private final IEmployeeRepository employeeRepository;
-
     private final IDepartmentRepository departmentRepository;
-
     private final IStatusRepository statusRepository;
-
     private final ITicketCategoryRepository ticketCategoryRepository;
-
 
     public UsersSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
                        IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository) {
@@ -43,6 +39,7 @@ public class UsersSeeder implements CommandLineRunner {
         loadUsers();
         loadStatuses();
         loadTicketCategories();
+
     }
 
     private void loadUsers() {
@@ -83,6 +80,7 @@ public class UsersSeeder implements CommandLineRunner {
         role.setRole(roleType);
         return role;
     }
+
     private void loadStatuses() {
         if (statusRepository.count() == 0) {
             statusRepository.save(buildStatus("PENDING"));
@@ -91,6 +89,7 @@ public class UsersSeeder implements CommandLineRunner {
             statusRepository.save(buildStatus("CLOSE"));
         }
     }
+
     private Status buildStatus(String name) {
         Status status = new Status();
         status.setName(name);
@@ -106,20 +105,31 @@ public class UsersSeeder implements CommandLineRunner {
             Department administracion = departmentRepository.findByName("Administracion")
                     .orElseThrow(() -> new RuntimeException("Administracion department not found"));
 
-            ticketCategoryRepository.save(buildCategory("Problemas técnicos", List.of(soporte)));
-            ticketCategoryRepository.save(buildCategory("Sugerencias de mejora", List.of(desarrollo, administracion)));
-            ticketCategoryRepository.save(buildCategory("Reclamos administrativos", List.of(administracion)));
-            ticketCategoryRepository.save(buildCategory("Errores del sistema", List.of(desarrollo, soporte)));
+            buildAndSaveCategory("Problemas técnicos", List.of(soporte));
+            buildAndSaveCategory("Sugerencias de mejora", List.of(desarrollo, administracion));
+            buildAndSaveCategory("Reclamos administrativos", List.of(administracion));
+            buildAndSaveCategory("Errores del sistema", List.of(desarrollo, soporte));
         }
     }
 
-    private TicketCategory buildCategory(String name, List<Department> departments) {
+    private void buildAndSaveCategory(String name, List<Department> departments) {
         TicketCategory category = new TicketCategory();
         category.setName(name);
         category.setDepartments(departments);
-        return category;
-    }
 
+        ticketCategoryRepository.save(category);
+
+        for (Department d : departments) {
+            if (d.getTicketCategories() == null) {
+                d.setTicketCategories(new java.util.ArrayList<>());
+            }
+            d.getTicketCategories().add(category);
+        }
+
+        departmentRepository.saveAll(departments);
+
+
+    }
 
     private void loadDepartments() {
         if (departmentRepository.count() == 0) {
@@ -139,4 +149,7 @@ public class UsersSeeder implements CommandLineRunner {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(7);
         return passwordEncoder.encode(password);
     }
+
+
+
 }

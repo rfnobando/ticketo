@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="~{fragments/head :: head('Mis Tickets')}">
-  <title>Mis Tickets</title>
+<head th:replace="~{fragments/head :: head('Tickets del Departamento')}">
+  <title>Tickets del Departamento</title>
 </head>
 <body id="page-top">
 <div id="wrapper">
@@ -12,12 +12,11 @@
       <nav th:replace="~{fragments/topbar :: topbar}"></nav>
 
       <div class="container-fluid">
-        <h1 class="h3 mb-4 text-gray-800">Mis Tickets</h1>
+        <h1 class="h3 mb-4 text-gray-800">Tickets del Departamento</h1>
 
         <div class="card shadow mb-4">
           <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: center;">
             <h6 class="m-0 font-weight-bold text-primary">Listado de Tickets</h6>
-
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -26,6 +25,7 @@
                 <tr>
                   <th>Título</th>
                   <th>Estado</th>
+                  <th>Categoría</th>
                   <th>Fecha de creación</th>
                   <th>Fecha de actualización</th>
                   <th>Acciones</th>
@@ -35,8 +35,9 @@
                 <tr th:each="ticket : ${tickets}">
                   <td th:text="${ticket.title}">Título</td>
                   <td th:text="${ticket.currentStatus}">Estado</td>
-                  <td th:text="${ticket.createdAt != null} ? ${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')} : '-'">Fecha creación</td>
-                  <td th:text="${ticket.updatedAt != null} ? ${#temporals.format(ticket.updatedAt, 'dd/MM/yyyy HH:mm')} : '-'">Fecha actualización</td>
+                  <td th:text="${ticket.categoryName}">Categoría</td>
+                  <td th:text="${ticket.createdAt != null} ? ${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')} : '-'">Creación</td>
+                  <td th:text="${ticket.updatedAt != null} ? ${#temporals.format(ticket.updatedAt, 'dd/MM/yyyy HH:mm')} : '-'">Actualización</td>
                   <td>
                     <a th:href="@{'/tickets/' + ${ticket.id} + '/messages'}" class="btn btn-sm btn-primary">Ver Mensajes</a>
                   </td>
@@ -44,7 +45,7 @@
                 </tbody>
               </table>
               <div th:if="${#lists.isEmpty(tickets)}" class="text-center text-muted mt-3">
-                No tenés tickets registrados.
+                No hay tickets registrados para tu departamento.
               </div>
             </div>
           </div>
