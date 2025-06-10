@@ -18,6 +18,7 @@
           <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary" th:text="'Ticket: ' + ${ticket.title}">Título del ticket</h6>
             <p class="mb-0"><strong>Estado:</strong> <span th:text="${ticket.currentStatus}"></span></p>
+            <p class="mb-0"><strong>Categoria:</strong> <span th:text="${ticket.categoryName}"></span></p>
             <p class="mb-0"><strong>Creado:</strong> <span th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
             <p class="mb-0"><strong>Actualizado:</strong> <span th:text="${#temporals.format(ticket.updatedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
           </div>

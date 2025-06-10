@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -39,20 +40,14 @@ public class TicketController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long customerId = user.getPerson().getId();
 
-        List<TicketDTO> ticketDTOs = ticketService.findByCustomerId(customerId);
+        List<TicketDTO> ticketsDTO = ticketService.findByCustomerId(customerId);
 
-        model.addAttribute("tickets", ticketDTOs);
+        model.addAttribute("tickets", ticketsDTO);
+        model.addAttribute("tituloPagina", "Mis Tickets");
+        model.addAttribute("mensajeVacio", "No tenés tickets registrados.");
+        model.addAttribute("mostrarBotonCrear", true);
+        model.addAttribute("linkAlternativo", null);
         return ViewRouteHelper.TICKET_LIST;
-    }
-
-
-    @GetMapping("/employee")
-    public String getEmployeeTickets(Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long employeeId = user.getPerson().getId();
-        List<Ticket> tickets = ticketMessageService.findTicketsByEmployeeId(employeeId);
-        model.addAttribute("tickets", tickets);
-        return ViewRouteHelper.TICKET_LIST_EMPLOYEE;
     }
 
     @GetMapping("/{ticketId}/messages")
@@ -110,13 +105,16 @@ public class TicketController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = user.getPerson();
 
-        if (person instanceof Employee) {
-            Employee employee = (Employee) person;
+        if (person instanceof Employee employee) {
             Long departmentId = employee.getDepartment().getId();
-            List<TicketWithCategoryDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
+            List<TicketDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
 
             model.addAttribute("tickets", tickets);
-            return ViewRouteHelper.TICKET_LIST_DEPARTMENT;
+            model.addAttribute("tituloPagina", "Tickets del Departamento");
+            model.addAttribute("mensajeVacio", "No hay tickets registrados para tu departamento.");
+            model.addAttribute("mostrarBotonCrear", false);
+            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/contestados", "texto", "Ver contestados"));
+            return ViewRouteHelper.TICKET_LIST;
         }
 
         return "redirect:/?error=not_authorized";
