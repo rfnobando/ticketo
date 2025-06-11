@@ -44,6 +44,19 @@ Para comenzar, clonar este repositorio:
 ```bash
 git clone https://github.com/rfnobando/ticketo.git
 ```
+Luego, crear la base de datos
+Antes de ejecutar la aplicación, asegurate de tener MySQL instalado y ejecutándose. Luego, creá la base de datos "ticketo" ejecutando el siguiente comando:
+```bash
+CREATE DATABASE ticketo;
+```
+
+Una vez abierto en programa, instalar dependencias del maven
+
+Y por ultimo, Para que la aplicación funcione correctamente, es necesario definir las siguientes variables de entorno:
+```bash
+(POR SEGURIDAD) EN LA CARPPETA DE DRIVE DE LA PRIMER ENTREGA DE SPRING, LLAMADA VARIABLES DE ENTORNO ENCONTRARAN LAS CLAVES ;
+```
+
 ## Funcionalidades 
 
 ### Cliente
@@ -79,4 +92,4 @@ La autenticacion se maneja con Spring Security.
 
 ## Ejecución
 
-Para ejecutar el proyecto, debe utilizarse la rama `trunk`, que contiene la versión estable del sistema. La ejecución se realiza iniciando el método `main` de la clase `SystemTest`, ubicada en `app/src/test/`. Desde ahí, podrán probar las distintas funcionalidades del sistema.
+Para ejecutar el proyecto, debe utilizarse la rama `trunk`, que contiene la versión estable del sistema. La ejecución se realiza iniciando el método main de la clase `TicketoApplication`. Desde ahí, podrán probar las distintas funcionalidades del sistema.
