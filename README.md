@@ -92,4 +92,4 @@ La autenticacion se maneja con Spring Security.
 
 ## Ejecución
 
-Para ejecutar el proyecto, debe utilizarse la rama `trunk`, que contiene la versión estable del sistema. La ejecución se realiza iniciando el método `TicketoApplication`. Desde ahí, podrán probar las distintas funcionalidades del sistema.
+Para ejecutar el proyecto, debe utilizarse la rama `trunk`, que contiene la versión estable del sistema. La ejecución se realiza iniciando el método main de la clase `TicketoApplication`. Desde ahí, podrán probar las distintas funcionalidades del sistema.
