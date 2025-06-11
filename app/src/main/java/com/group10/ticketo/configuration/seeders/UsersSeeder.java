@@ -3,6 +3,7 @@ package com.group10.ticketo.configuration.seeders;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.repositories.*;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,18 @@ import java.util.List;
 public class UsersSeeder implements CommandLineRunner {
 
     private static final String passwordGeneric = "1234567";
+
+    @Value("${STRING_PENDING_NAME}")
+    private String defaultPendingName;
+
+    @Value("${STRING_IN_PROGRESS_NAME}")
+    private String defaultInProgressName;
+
+    @Value("${STRING_RESOLVED_NAME}")
+    private String defaultResolvedName;
+
+    @Value("${STRING_CLOSE_NAME}")
+    private String defaultCloseName;
 
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
@@ -83,10 +96,10 @@ public class UsersSeeder implements CommandLineRunner {
 
     private void loadStatuses() {
         if (statusRepository.count() == 0) {
-            statusRepository.save(buildStatus("PENDING"));
-            statusRepository.save(buildStatus("IN_PROGRESS"));
-            statusRepository.save(buildStatus("RESOLVED"));
-            statusRepository.save(buildStatus("CLOSE"));
+            statusRepository.save(buildStatus(defaultPendingName));
+            statusRepository.save(buildStatus(defaultInProgressName));
+            statusRepository.save(buildStatus(defaultResolvedName));
+            statusRepository.save(buildStatus(defaultCloseName));
         }
     }
 

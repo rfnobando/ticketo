@@ -22,6 +22,9 @@
             <p class="mb-0"><strong>Creado:</strong> <span th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
             <p class="mb-0"><strong>Actualizado:</strong> <span th:text="${#temporals.format(ticket.updatedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
           </div>
+          <div th:if="${error}" class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+          </div>
 
           <div class="card-body">
             <h5 class="mb-3">Historial de mensajes</h5>
