@@ -120,5 +120,18 @@ public class TicketService implements ITicketService {
         );
         return ticket.getCustomer().getId();
     }
+    @Override
+    public List<TicketDTO> findTicketsAnsweredByEmployee(Long employeeId) {
+        List<Ticket> tickets = ticketRepository.findTicketsAnsweredByEmployee(employeeId);
+        return tickets.stream()
+                .map(ticket -> new TicketDTO(
+                        ticket.getId(),
+                        ticket.getTitle(),
+                        ticket.getCreatedAt(),
+                        ticket.getUpdatedAt(),
+                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId())
+                ))
+                .toList();
+    }
 
 }
