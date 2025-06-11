@@ -14,4 +14,7 @@ public interface ITicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("SELECT t FROM Ticket t JOIN t.ticketCategory c JOIN c.departments d WHERE d.id = :departmentId")
     List<Ticket> findTicketsByDepartmentId(@Param("departmentId") Long departmentId);
+
+    @Query("SELECT DISTINCT tm.ticket FROM TicketMessage tm WHERE tm.person.id = :employeeId")
+    List<Ticket> findTicketsAnsweredByEmployee(@Param("employeeId") Long employeeId);
 }

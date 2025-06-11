@@ -10,6 +10,7 @@ import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
 import com.group10.ticketo.services.ITicketStatusService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -117,6 +118,23 @@ public class TicketController {
 
             model.addAttribute("tickets", tickets);
             return ViewRouteHelper.TICKET_LIST_DEPARTMENT;
+        }
+
+        return "redirect:/?error=not_authorized";
+    }
+
+    @GetMapping("/answered")
+    public String getAnsweredTickets(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = user.getPerson();
+
+        // Validamos que sea un empleado
+        if (person instanceof Employee) {
+            Long employeeId = person.getId();
+            List<TicketDTO> tickets = ticketService.findTicketsAnsweredByEmployee(employeeId);
+
+            model.addAttribute("tickets", tickets);
+            return ViewRouteHelper.TICKET_LIST;
         }
 
         return "redirect:/?error=not_authorized";
