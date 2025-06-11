@@ -1,5 +1,7 @@
 package com.group10.ticketo.repositories;
 import com.group10.ticketo.entities.Ticket;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
