@@ -11,4 +11,5 @@ public final class ViewRouteHelper {
     public static final String TICKET_MESSAGES = "ticket/messages";
     public static final String TICKET_CREATE_TICKET ="ticket/create";
     public static final String TICKET_LIST_DEPARTMENT ="ticket/departments-tickets";
+
 }
