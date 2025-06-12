@@ -1,5 +1,6 @@
 package com.group10.ticketo.services.implementation;
 
+import com.group10.ticketo.constants.TicketStatusConstants;
 import com.group10.ticketo.dtos.CreateTicketMessageDTO;
 import com.group10.ticketo.dtos.TicketMessageDTO;
 import com.group10.ticketo.entities.*;
@@ -11,7 +12,6 @@ import com.group10.ticketo.repositories.ITicketStatusRepository;
 import com.group10.ticketo.services.IMailService;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketStatusService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,12 +20,6 @@ import java.util.Optional;
 
 @Service
 public class TicketMessageService implements ITicketMessageService {
-
-    @Value("${STRING_PENDING_NAME}")
-    private String defaultPendingName;
-
-    @Value("${STRING_IN_PROGRESS_NAME}")
-    private String defaultInProgressName;
 
     private final ITicketMessageRepository ticketMessageRepository;
     private final ITicketRepository ticketRepository;
@@ -97,7 +91,7 @@ public class TicketMessageService implements ITicketMessageService {
 
 
         TicketStatus ticketStatus = ticketStatusRepository.findFirstByTicketIdOrderByCreatedAtDesc(ticket.getId());
-        if(person instanceof Customer && ticketStatus.getStatus().getName().equals(defaultPendingName)){
+        if(person instanceof Customer && ticketStatus.getStatus().getName().equals(TicketStatusConstants.PENDING)){
             throw new TicketMessageNotAllowedException("ERROR: Customer cannot sen a message if the Status is Pending", ticket.getId());
         }
 
@@ -113,9 +107,9 @@ public class TicketMessageService implements ITicketMessageService {
         ticketRepository.save(ticket);
 
         if(person instanceof Employee employee ){
-            if(ticketStatus.getStatus().getName().equals(defaultPendingName)){
+            if(ticketStatus.getStatus().getName().equals(TicketStatusConstants.PENDING)){
                 ticketStatus.setUpdatedAt(LocalDateTime.now());
-                ticketStatusService.createTicketStatus(ticket.getId(), defaultInProgressName,employee.getId());
+                ticketStatusService.createTicketStatus(ticket.getId(), TicketStatusConstants.IN_PROGRESS,employee.getId());
             }
 
             mailService.sendTicketMessageToClient(ticketMessage);
