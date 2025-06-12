@@ -26,12 +26,13 @@ public class GlobalExceptionHandler {
         this.ticketService = ticketService;
     }
 
-    @ExceptionHandler(UserValidationException .class)
-    public String handleEmailAlreadyRegistered(UserValidationException  ex, Model model) {
+    @ExceptionHandler(UserValidationException.class)
+    public String handleEmailAlreadyRegistered(UserValidationException ex, Model model) {
         model.addAttribute("error", ex.getMessage());
         model.addAttribute("customer", new CustomerRegistrationDTO());
         return ViewRouteHelper.REGISTER;
     }
+
     @ExceptionHandler(TicketMessageNotAllowedException.class)
     public String handleTicketMessageNotAllowed(TicketMessageNotAllowedException ex, Model model) throws Exception {
         Long ticketId = ex.getTicketId();
