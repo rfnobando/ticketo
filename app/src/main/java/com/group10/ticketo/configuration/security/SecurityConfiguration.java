@@ -1,5 +1,6 @@
 package com.group10.ticketo.configuration.security;
 
+import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.services.implementation.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,8 @@ public class SecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
+                .exceptionHandling(exception ->
+                        exception.accessDeniedPage(ViewRouteHelper.UNAUTHORIZED_USER))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
