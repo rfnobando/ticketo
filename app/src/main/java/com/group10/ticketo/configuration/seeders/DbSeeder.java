@@ -1,45 +1,49 @@
 package com.group10.ticketo.configuration.seeders;
 
+import com.group10.ticketo.constants.PermissionConstants;
+import com.group10.ticketo.constants.RoleConstants;
+import com.group10.ticketo.constants.TicketStatusConstants;
 import com.group10.ticketo.entities.*;
+import com.group10.ticketo.exceptions.RoleNotFoundException;
 import com.group10.ticketo.repositories.*;
-import jakarta.transaction.Transactional;
+import com.group10.ticketo.utils.SecurityUtils;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Transactional // ✔ Agregado para evitar LazyInitializationException
-public class UsersSeeder implements CommandLineRunner {
-
-    private static final String passwordGeneric = "1234567";
-
+public class DbSeeder implements CommandLineRunner {
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final IEmployeeRepository employeeRepository;
     private final IDepartmentRepository departmentRepository;
     private final IStatusRepository statusRepository;
     private final ITicketCategoryRepository ticketCategoryRepository;
+    private final IPermissionRepository permissionRepository;
 
-    public UsersSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
-                       IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository) {
+    public DbSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
+                    IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository,IPermissionRepository permissionRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.statusRepository = statusRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         loadRoles();
         loadDepartments();
         loadUsers();
         loadStatuses();
         loadTicketCategories();
-
+        loadPermissions();
     }
 
     private void loadUsers() {
@@ -49,29 +53,36 @@ public class UsersSeeder implements CommandLineRunner {
     }
 
     private void loadEmployeeAdmin() {
-        employeeRepository.save(buildEmployeeAdmin("Juan", "Perez", "admin@gmail.com", passwordGeneric));
+        employeeRepository.save(buildEmployeeAdmin("Juan", "Perez", "admin@gmail.com", "1234567"));
     }
 
     private Employee buildEmployeeAdmin(String name, String surname, String email, String password) {
         User user = User.builder()
                 .email(email)
-                .password(encryptPassword(password))
-                .roles(List.of(roleRepository.findByRole("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Admin role not found"))))
+                .password(SecurityUtils.encryptPassword(password))
+                .roles(List.of(
+                        roleRepository.findByRole(RoleConstants.ADMIN).orElseThrow(() -> new RoleNotFoundException("Admin role not found")),
+                        roleRepository.findByRole(RoleConstants.EMPLOYEE).orElseThrow(() -> new RoleNotFoundException("Employee role not found")))
+                )
                 .build();
+
         userRepository.save(user);
+
         Employee employee = new Employee();
         employee.setName(name);
         employee.setSurname(surname);
         employee.setFileNumber("0001");
         employee.setDepartment(departmentRepository.findByName("Administracion").orElseThrow(() -> new RuntimeException("Development department not found")));
         employee.setUser(user);
+
         return employee;
     }
 
     private void loadRoles() {
         if (roleRepository.count() == 0) {
-            roleRepository.save(buildRole("ROLE_ADMIN"));
-            roleRepository.save(buildRole("ROLE_CUSTOMER"));
+            roleRepository.save(buildRole(RoleConstants.ADMIN));
+            roleRepository.save(buildRole(RoleConstants.CUSTOMER));
+            roleRepository.save(buildRole(RoleConstants.EMPLOYEE));
         }
     }
 
@@ -83,10 +94,10 @@ public class UsersSeeder implements CommandLineRunner {
 
     private void loadStatuses() {
         if (statusRepository.count() == 0) {
-            statusRepository.save(buildStatus("PENDING"));
-            statusRepository.save(buildStatus("IN_PROGRESS"));
-            statusRepository.save(buildStatus("RESOLVED"));
-            statusRepository.save(buildStatus("CLOSE"));
+            statusRepository.save(buildStatus(TicketStatusConstants.PENDING));
+            statusRepository.save(buildStatus(TicketStatusConstants.IN_PROGRESS));
+            statusRepository.save(buildStatus(TicketStatusConstants.RESOLVED));
+            statusRepository.save(buildStatus(TicketStatusConstants.CLOSED));
         }
     }
 
@@ -114,6 +125,7 @@ public class UsersSeeder implements CommandLineRunner {
 
     private void buildAndSaveCategory(String name, List<Department> departments) {
         TicketCategory category = new TicketCategory();
+
         category.setName(name);
         category.setDepartments(departments);
 
@@ -121,14 +133,11 @@ public class UsersSeeder implements CommandLineRunner {
 
         for (Department d : departments) {
             if (d.getTicketCategories() == null) {
-                d.setTicketCategories(new java.util.ArrayList<>());
+                d.setTicketCategories(new ArrayList<TicketCategory>());
             }
+
             d.getTicketCategories().add(category);
         }
-
-        departmentRepository.saveAll(departments);
-
-
     }
 
     private void loadDepartments() {
@@ -145,11 +154,20 @@ public class UsersSeeder implements CommandLineRunner {
         return department;
     }
 
-    private String encryptPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(7);
-        return passwordEncoder.encode(password);
+    private  void loadPermissions(){
+        if(permissionRepository.count() == 0){
+            permissionRepository.save(buildPermission(PermissionConstants.CREATE_TICKET,RoleConstants.CUSTOMER));
+        }
     }
-
-
+    private Permission buildPermission(String name,String role){
+        Role roleAux= roleRepository.findByRole(role).orElseThrow(() -> new RoleNotFoundException(role + " role not found"));
+        Permission permission= new Permission();
+        permission.setPermission(name);
+        permission.setRoles(List.of(
+                roleAux
+                ));
+        roleAux.setPermissions(List.of(permission));
+        return permission;
+    }
 
 }

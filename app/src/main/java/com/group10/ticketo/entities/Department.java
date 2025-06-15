@@ -3,6 +3,7 @@ package com.group10.ticketo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,4 +30,12 @@ public class Department  {
             inverseJoinColumns = @JoinColumn(name = "ticket_category_id")
     )
     private List<TicketCategory> ticketCategories;
+
+    public void addTicketCategory(TicketCategory ticketCategory) {
+        if (this.ticketCategories == null) {
+            this.ticketCategories = new ArrayList<TicketCategory>();
+        }
+
+        this.ticketCategories.add(ticketCategory);
+    }
 }

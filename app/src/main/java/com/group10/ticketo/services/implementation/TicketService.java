@@ -2,7 +2,6 @@ package com.group10.ticketo.services.implementation;
 
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
-import com.group10.ticketo.dtos.TicketWithCategoryDTO;
 import com.group10.ticketo.entities.Customer;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketCategory;
@@ -47,17 +46,18 @@ public class TicketService implements ITicketService {
                         ticket.getTitle(),
                         ticket.getCreatedAt(),
                         ticket.getUpdatedAt(),
-                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId())
+                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId()),
+                        ticket.getTicketCategory().getName()
                 ))
                 .toList();
     }
 
     @Override
-    public List<TicketWithCategoryDTO> findTicketsByDepartmentId(Long departmentId) {
+    public List<TicketDTO> findTicketsByDepartmentId(Long departmentId) {
         List<Ticket> tickets = ticketRepository.findTicketsByDepartmentId(departmentId);
 
         return tickets.stream()
-                .map(ticket -> new TicketWithCategoryDTO(
+                .map(ticket -> new TicketDTO(
                         ticket.getId(),
                         ticket.getTitle(),
                         ticket.getCreatedAt(),
@@ -110,6 +110,7 @@ public class TicketService implements ITicketService {
         dto.setCreatedAt(ticket.getCreatedAt());
         dto.setUpdatedAt(ticket.getUpdatedAt());
         dto.setCurrentStatus(ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId()));
+        dto.setCategoryName(ticket.getTicketCategory().getName());
 
         return dto;
     }
