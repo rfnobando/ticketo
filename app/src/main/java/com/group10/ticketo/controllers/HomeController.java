@@ -12,7 +12,7 @@ public class HomeController {
     @GetMapping("/")
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView(ViewRouteHelper.INDEX);
-        mv.addObject("title", "Ticketo");//es un ejemplo
+        mv.addObject("title", "Ticketo");
         return mv;
     }
 }

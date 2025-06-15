@@ -2,8 +2,10 @@ package com.group10.ticketo.configuration.security;
 
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.services.implementation.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,8 +31,17 @@ public class SecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
-                .exceptionHandling(exception ->
-                        exception.accessDeniedPage(ViewRouteHelper.UNAUTHORIZED_USER))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            if (request.getRequestURI().startsWith("/api/")) {
+                                response.setContentType("application/json");
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                            } else {
+                                response.sendRedirect("/auth/login");
+                            }
+                        })
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
@@ -44,10 +55,12 @@ public class SecurityConfiguration {
                     ).permitAll();
                     auth.requestMatchers(
                             "/auth/login",
+                            "/auth/api-login",
                             "/auth/loginProcess",
                             "/auth/loginSuccess",
                             "/auth/logout",
-                            "/auth/register"
+                            "/auth/register",
+                            "/api/v1/auth/login"
                     ).permitAll();
                     auth.anyRequest().authenticated();
                 })
@@ -68,7 +81,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
