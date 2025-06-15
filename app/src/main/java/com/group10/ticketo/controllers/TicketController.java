@@ -3,21 +3,18 @@ package com.group10.ticketo.controllers;
 import com.group10.ticketo.dtos.*;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
-import com.group10.ticketo.repositories.ICustomerRepository;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
-import com.group10.ticketo.repositories.ITicketStatusRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
-import com.group10.ticketo.services.ITicketStatusService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +33,7 @@ public class TicketController {
         this.ticketMessageService = ticketMessageService;
         this.ticketCategoryRepository = ticketCategoryRepository;
     }
-
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/myTickets")
     public String getCustomerTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -89,6 +86,7 @@ public class TicketController {
         return "redirect:/tickets/{ticketId}/messages";
     }
 
+    @PreAuthorize("hasAuthority('CREATE_TICKET')")
     @GetMapping("/create")
     public String showCreateTicketForm(Model model) {
         model.addAttribute("ticketDTO", new CreateTicketDTO());
@@ -111,7 +109,7 @@ public class TicketController {
         ticketService.createTicket(dto);
         return "redirect:/tickets/myTickets?success=true";
     }
-
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/myDepartamentTickets")
     public String getDepartmentTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
