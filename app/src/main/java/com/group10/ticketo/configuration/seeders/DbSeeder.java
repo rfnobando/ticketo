@@ -1,8 +1,10 @@
 package com.group10.ticketo.configuration.seeders;
 
+import com.group10.ticketo.constants.PermissionConstants;
 import com.group10.ticketo.constants.RoleConstants;
 import com.group10.ticketo.constants.TicketStatusConstants;
 import com.group10.ticketo.entities.*;
+import com.group10.ticketo.exceptions.RoleNotFoundException;
 import com.group10.ticketo.repositories.*;
 import com.group10.ticketo.utils.SecurityUtils;
 import org.springframework.boot.CommandLineRunner;
@@ -20,15 +22,17 @@ public class DbSeeder implements CommandLineRunner {
     private final IDepartmentRepository departmentRepository;
     private final IStatusRepository statusRepository;
     private final ITicketCategoryRepository ticketCategoryRepository;
+    private final IPermissionRepository permissionRepository;
 
     public DbSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
-                    IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository) {
+                    IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository,IPermissionRepository permissionRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.statusRepository = statusRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class DbSeeder implements CommandLineRunner {
         loadUsers();
         loadStatuses();
         loadTicketCategories();
+        loadPermissions();
     }
 
     private void loadUsers() {
@@ -55,7 +60,10 @@ public class DbSeeder implements CommandLineRunner {
         User user = User.builder()
                 .email(email)
                 .password(SecurityUtils.encryptPassword(password))
-                .roles(List.of(roleRepository.findByRole(RoleConstants.ADMIN).orElseThrow(() -> new RuntimeException("Admin role not found"))))
+                .roles(List.of(
+                        roleRepository.findByRole(RoleConstants.ADMIN).orElseThrow(() -> new RoleNotFoundException("Admin role not found")),
+                        roleRepository.findByRole(RoleConstants.EMPLOYEE).orElseThrow(() -> new RoleNotFoundException("Employee role not found")))
+                )
                 .build();
 
         userRepository.save(user);
@@ -74,6 +82,7 @@ public class DbSeeder implements CommandLineRunner {
         if (roleRepository.count() == 0) {
             roleRepository.save(buildRole(RoleConstants.ADMIN));
             roleRepository.save(buildRole(RoleConstants.CUSTOMER));
+            roleRepository.save(buildRole(RoleConstants.EMPLOYEE));
         }
     }
 
@@ -143,6 +152,22 @@ public class DbSeeder implements CommandLineRunner {
         Department department = new Department();
         department.setName(name);
         return department;
+    }
+
+    private  void loadPermissions(){
+        if(permissionRepository.count() == 0){
+            permissionRepository.save(buildPermission(PermissionConstants.CREATE_TICKET,RoleConstants.CUSTOMER));
+        }
+    }
+    private Permission buildPermission(String name,String role){
+        Role roleAux= roleRepository.findByRole(role).orElseThrow(() -> new RoleNotFoundException(role + " role not found"));
+        Permission permission= new Permission();
+        permission.setPermission(name);
+        permission.setRoles(List.of(
+                roleAux
+                ));
+        roleAux.setPermissions(List.of(permission));
+        return permission;
     }
 
 }
