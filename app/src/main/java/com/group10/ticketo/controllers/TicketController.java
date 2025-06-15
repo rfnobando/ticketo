@@ -6,6 +6,8 @@ import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,10 +50,20 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}/messages")
-    public String getTicketMessages(@PathVariable("ticketId") Long ticketId, Model model) throws Exception {
+    public String getTicketMessages(@PathVariable("ticketId") Long ticketId,
+                                    HttpServletRequest request,
+                                    HttpSession session,
+                                    Model model) throws Exception {
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
         Long customerId = ticketService.findCustomerId(ticketId);
+
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("/tickets/" + ticketId + "/messages")) {
+            session.setAttribute("lastTicketPage", referer);
+        }
+
+
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
         model.addAttribute("customerId", customerId);
