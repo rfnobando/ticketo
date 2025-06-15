@@ -130,7 +130,8 @@ public class TicketService implements ITicketService {
                         ticket.getTitle(),
                         ticket.getCreatedAt(),
                         ticket.getUpdatedAt(),
-                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId())
+                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId()),
+                        ticket.getTicketCategory().getName()
                 ))
                 .toList();
     }
