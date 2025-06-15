@@ -123,24 +123,29 @@ public class TicketController {
             model.addAttribute("tituloPagina", "Tickets del Departamento");
             model.addAttribute("mensajeVacio", "No hay tickets registrados para tu departamento.");
             model.addAttribute("mostrarBotonCrear", false);
-            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/contestados", "texto", "Ver contestados"));
+            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/answered", "texto", "Ver contestados"));
             return ViewRouteHelper.TICKET_LIST;
         }
 
         return "redirect:/?error=not_authorized";
     }
 
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/answered")
     public String getAnsweredTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = user.getPerson();
 
-        // Validamos que sea un empleado
         if (person instanceof Employee) {
             Long employeeId = person.getId();
             List<TicketDTO> tickets = ticketService.findTicketsAnsweredByEmployee(employeeId);
 
             model.addAttribute("tickets", tickets);
+            model.addAttribute("tituloPagina", "Tickets Contestados");
+            model.addAttribute("mensajeVacio", "No hay tickets contestados por vos.");
+            model.addAttribute("mostrarBotonCrear", false);
+            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/myDepartamentTickets", "texto", "Volver a departamento"));
+
             return ViewRouteHelper.TICKET_LIST;
         }
 
