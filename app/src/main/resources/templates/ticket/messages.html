@@ -15,8 +15,9 @@
         <h1 class="h3 mb-4 text-gray-800">Mensajes del Ticket</h1>
 
         <div class="card shadow mb-4">
-          <div class="card-header py-3">
+          <div class="card-header py-3">customerName
             <h6 class="m-0 font-weight-bold text-primary" th:text="'Ticket: ' + ${ticket.title}">Título del ticket</h6>
+            <p class="mb-0"><strong>Cliente:</strong> <span th:text="${customerName}"></span></p>
             <p class="mb-0"><strong>Estado:</strong> <span th:text="${ticket.currentStatus}"></span></p>
             <p class="mb-0"><strong>Categoria:</strong> <span th:text="${ticket.categoryName}"></span></p>
             <p class="mb-0"><strong>Creado:</strong> <span th:text="${#temporals.format(ticket.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
