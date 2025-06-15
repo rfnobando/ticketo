@@ -12,8 +12,9 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -53,12 +54,22 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getRoles().stream()
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        // Agregar permisos
+        this.getRoles().stream()
                 .filter(role -> role.getPermissions() != null)
                 .flatMap(role -> role.getPermissions().stream())
                 .filter(permission -> permission != null && permission.getPermission() != null && !permission.getPermission().isBlank())
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-                .collect(Collectors.toSet());
+                .forEach(authorities::add);
+
+        // Agregar los nombres de los roles como authorities también
+        this.getRoles().stream()
+                .filter(role -> role.getRole() != null && !role.getRole().isBlank())
+                .map(role -> new SimpleGrantedAuthority(role.getRole())) // "ROLE_" es importante
+                .forEach(authorities::add);
+
+        return authorities;
     }
 
     @Override

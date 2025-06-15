@@ -17,4 +17,5 @@ public class TicketDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String currentStatus;
+    private String categoryName;
 }

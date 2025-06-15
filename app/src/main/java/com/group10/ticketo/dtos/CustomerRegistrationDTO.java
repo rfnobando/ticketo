@@ -6,22 +6,22 @@ import lombok.Data;
 
 @Data
 public class CustomerRegistrationDTO {
-    @NotBlank
+    @NotBlank(message = "Debes ingresar al menos un nombre")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Debes ingresar al menos un apellido")
     private String surname;
 
-    @NotBlank
+    @NotBlank(message = "Debes ingresar un teléfono")
     private String phoneNumber;
 
-    @NotBlank
+    @NotBlank(message = "Debes ingresar un email")
     @Email
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Debes ingresar una contraseña")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Debes repetir la contraseña")
     private String confirmPassword;
 }

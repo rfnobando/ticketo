@@ -3,12 +3,11 @@ package com.group10.ticketo.controllers;
 import com.group10.ticketo.dtos.*;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
-import com.group10.ticketo.repositories.ICustomerRepository;
 import com.group10.ticketo.repositories.ITicketCategoryRepository;
-import com.group10.ticketo.repositories.ITicketStatusRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
-import com.group10.ticketo.services.ITicketStatusService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -34,33 +33,37 @@ public class TicketController {
         this.ticketMessageService = ticketMessageService;
         this.ticketCategoryRepository = ticketCategoryRepository;
     }
-
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/myTickets")
     public String getCustomerTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long customerId = user.getPerson().getId();
 
-        List<TicketDTO> ticketDTOs = ticketService.findByCustomerId(customerId);
+        List<TicketDTO> ticketsDTO = ticketService.findByCustomerId(customerId);
 
-        model.addAttribute("tickets", ticketDTOs);
+        model.addAttribute("tickets", ticketsDTO);
+        model.addAttribute("tituloPagina", "Mis Tickets");
+        model.addAttribute("mensajeVacio", "No tenés tickets registrados.");
+        model.addAttribute("mostrarBotonCrear", true);
+        model.addAttribute("linkAlternativo", null);
         return ViewRouteHelper.TICKET_LIST;
     }
 
-
-    @GetMapping("/employee")
-    public String getEmployeeTickets(Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long employeeId = user.getPerson().getId();
-        List<Ticket> tickets = ticketMessageService.findTicketsByEmployeeId(employeeId);
-        model.addAttribute("tickets", tickets);
-        return ViewRouteHelper.TICKET_LIST_EMPLOYEE;
-    }
-
     @GetMapping("/{ticketId}/messages")
-    public String getTicketMessages(@PathVariable("ticketId") Long ticketId, Model model) throws Exception {
+    public String getTicketMessages(@PathVariable("ticketId") Long ticketId,
+                                    HttpServletRequest request,
+                                    HttpSession session,
+                                    Model model) throws Exception {
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
         Long customerId = ticketService.findCustomerId(ticketId);
+
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("/tickets/" + ticketId + "/messages")) {
+            session.setAttribute("lastTicketPage", referer);
+        }
+
+
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
         model.addAttribute("customerId", customerId);
@@ -83,6 +86,7 @@ public class TicketController {
         return "redirect:/tickets/{ticketId}/messages";
     }
 
+    @PreAuthorize("hasAuthority('CREATE_TICKET')")
     @GetMapping("/create")
     public String showCreateTicketForm(Model model) {
         model.addAttribute("ticketDTO", new CreateTicketDTO());
@@ -105,19 +109,22 @@ public class TicketController {
         ticketService.createTicket(dto);
         return "redirect:/tickets/myTickets?success=true";
     }
-
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/myDepartamentTickets")
     public String getDepartmentTickets(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = user.getPerson();
 
-        if (person instanceof Employee) {
-            Employee employee = (Employee) person;
+        if (person instanceof Employee employee) {
             Long departmentId = employee.getDepartment().getId();
-            List<TicketWithCategoryDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
+            List<TicketDTO> tickets = ticketService.findTicketsByDepartmentId(departmentId);
 
             model.addAttribute("tickets", tickets);
-            return ViewRouteHelper.TICKET_LIST_DEPARTMENT;
+            model.addAttribute("tituloPagina", "Tickets del Departamento");
+            model.addAttribute("mensajeVacio", "No hay tickets registrados para tu departamento.");
+            model.addAttribute("mostrarBotonCrear", false);
+            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/contestados", "texto", "Ver contestados"));
+            return ViewRouteHelper.TICKET_LIST;
         }
 
         return "redirect:/?error=not_authorized";
