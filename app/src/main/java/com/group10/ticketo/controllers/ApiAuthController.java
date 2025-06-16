@@ -2,12 +2,15 @@ package com.group10.ticketo.controllers;
 
 import com.group10.ticketo.dtos.ApiLoginRequestDTO;
 import com.group10.ticketo.dtos.ApiLoginResponseDTO;
+import com.group10.ticketo.services.IApiAuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,18 +23,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class ApiAuthController {
-    private final AuthenticationManager authenticationManager;
+    private final IApiAuthService apiAuthService;
 
-    public ApiAuthController(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public ApiAuthController(IApiAuthService apiAuthService) {
+        this.apiAuthService = apiAuthService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiLoginResponseDTO> login(@RequestBody ApiLoginRequestDTO apiLoginRequestDTO,
-                                                     HttpServletRequest request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(apiLoginRequestDTO.email(), apiLoginRequestDTO.password())
+    @Operation(summary = "Autentica un usuario y crea sesión",
+            description = "Recibe email y contraseña, autentica y devuelve mensaje de éxito o error.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login exitoso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiLoginResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Credenciales inválidas",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiLoginResponseDTO.class)))
+    })
+    public ResponseEntity<ApiLoginResponseDTO> login(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Credenciales de usuario (email y password)",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = ApiLoginRequestDTO.class))
+            )
+            @RequestBody ApiLoginRequestDTO apiLoginRequestDTO,
+            HttpServletRequest request) {
+
+            Authentication authentication = apiAuthService.authenticate(
+                    apiLoginRequestDTO.email(),
+                    apiLoginRequestDTO.password()
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -43,11 +63,6 @@ public class ApiAuthController {
                     );
 
             return ResponseEntity.ok(new ApiLoginResponseDTO("Login exitoso.", 200));
-        } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    new ApiLoginResponseDTO("Credenciales inválidas.", 401)
-            );
-        }
     }
 
 }
