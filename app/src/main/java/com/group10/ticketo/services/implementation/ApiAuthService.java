@@ -23,7 +23,6 @@ public class ApiAuthService implements IApiAuthService {
                     new UsernamePasswordAuthenticationToken(email, password)
             );
         } catch (AuthenticationException ex) {
-            // Podés pasar el mensaje o uno custom
             throw new ApiInvalidCredentialsException("Credenciales inválidas.");
         }
     }
