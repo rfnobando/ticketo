@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                             "/auth/loginSuccess",
                             "/auth/logout",
                             "/auth/register",
-                            "/api/v1/auth/login"
+                            "/api/v1/**"
                     ).permitAll();
                     auth.anyRequest().authenticated();
                 })
