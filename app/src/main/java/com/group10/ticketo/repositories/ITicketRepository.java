@@ -106,5 +106,8 @@ public interface ITicketRepository extends JpaRepository<Ticket, Long> {
             """)
     List<Ticket> findByDepartmentIdAndLatestStatusNameOrderByCreatedAtDesc(@Param("departmentId") Long departmentId,
                                                                            @Param("status") String status);
+
+    @Query("SELECT DISTINCT tm.ticket FROM TicketMessage tm WHERE tm.person.id = :employeeId")
+    List<Ticket> findTicketsAnsweredByEmployee(@Param("employeeId") Long employeeId);
 }
 
