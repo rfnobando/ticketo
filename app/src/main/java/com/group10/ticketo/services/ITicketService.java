@@ -26,4 +26,6 @@ public interface ITicketService {
 
     //Trae el id de la persona que creo ticket
     Long findCustomerId (Long ticketId) throws Exception;
+    //Trae a los tickets respondidos por un empleado
+    List<TicketDTO> findTicketsAnsweredByEmployee(Long employeeId);
 }
