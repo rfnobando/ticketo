@@ -34,6 +34,11 @@ public class AuthController {
         return "redirect:/";
     }
 
+    @GetMapping("/api-login")
+    public String login(Model model) {
+        return ViewRouteHelper.USER_API_LOGIN;
+    }
+
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("customer", new CustomerRegistrationDTO());
