@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                                 response.sendRedirect("/auth/login");
                             }
                         })
+                        .accessDeniedPage(ViewRouteHelper.UNAUTHORIZED_USER)
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -60,7 +61,7 @@ public class SecurityConfiguration {
                             "/auth/loginSuccess",
                             "/auth/logout",
                             "/auth/register",
-                            "/api/v1/auth/login"
+                            "/api/v1/**"
                     ).permitAll();
                     auth.anyRequest().authenticated();
                 })
