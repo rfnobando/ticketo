@@ -23,9 +23,10 @@ public class DbSeeder implements CommandLineRunner {
     private final IStatusRepository statusRepository;
     private final ITicketCategoryRepository ticketCategoryRepository;
     private final IPermissionRepository permissionRepository;
+    private final ICustomerRepository customerRepository;
 
     public DbSeeder(IUserRepository userRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository,
-                    IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository,IPermissionRepository permissionRepository) {
+                    IDepartmentRepository departmentRepository, IStatusRepository statusRepository, ITicketCategoryRepository ticketCategoryRepository, IPermissionRepository permissionRepository, ICustomerRepository customerRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.employeeRepository = employeeRepository;
@@ -33,6 +34,7 @@ public class DbSeeder implements CommandLineRunner {
         this.statusRepository = statusRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
         this.permissionRepository = permissionRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -49,7 +51,28 @@ public class DbSeeder implements CommandLineRunner {
     private void loadUsers() {
         if (userRepository.count() == 0) {
             loadEmployeeAdmin();
+            loadCustomer();
         }
+    }
+
+    private void loadCustomer() {
+        User user = User.builder()
+                .email("cliente@test.com")
+                .password(SecurityUtils.encryptPassword("1234567"))
+                .roles(List.of(
+                        roleRepository.findByRole(RoleConstants.CUSTOMER)
+                                .orElseThrow(() -> new RoleNotFoundException("Customer role not found")))
+                )
+                .build();
+
+        userRepository.save(user);
+
+        Customer customer = new Customer();
+        customer.setPhoneNumber("1111111111");
+        customer.setUser(user);
+
+        customerRepository.save(customer);
+
     }
 
     private void loadEmployeeAdmin() {
