@@ -25,6 +25,40 @@
                         <a th:if="${linkAlternativo != null}" th:href="${linkAlternativo.url}" class="btn btn-outline-primary ml-2" th:text="${linkAlternativo.texto}"></a>
                     </div>
                     <div class="card-body">
+                        <form method="get" th:action="@{${actionUrl}}" class="form-inline justify-content-end">
+                            <div class="form-group mr-3 mb-2">
+                                <label for="estado" class="mr-2">Filtrar por estado:</label>
+                                <select name="estado" id="estado"class="form-control">
+                                    <option value="">Todos</option>
+                                    <option th:value="${T(com.group10.ticketo.constants.TicketStatusConstants).PENDING}"
+                                            th:selected="${estado == T(com.group10.ticketo.constants.TicketStatusConstants).PENDING}">
+                                        Pendiente
+                                    </option>
+                                    <option th:value="${T(com.group10.ticketo.constants.TicketStatusConstants).IN_PROGRESS}"
+                                            th:selected="${estado == T(com.group10.ticketo.constants.TicketStatusConstants).IN_PROGRESS}">
+                                        En Progreso
+                                    </option>
+                                    <option th:value="${T(com.group10.ticketo.constants.TicketStatusConstants).RESOLVED}"
+                                            th:selected="${estado == T(com.group10.ticketo.constants.TicketStatusConstants).RESOLVED}">
+                                        Resuelto
+                                    </option>
+                                    <option th:value="${T(com.group10.ticketo.constants.TicketStatusConstants).CLOSED}"
+                                            th:selected="${estado == T(com.group10.ticketo.constants.TicketStatusConstants).CLOSED}">
+                                        Cerrado
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mr-3 mb-2">
+                                <label for="orden" class="mr-2">Orden:</label>
+                                <select name="orden" id="orden" class="form-control">
+                                    <option value="asc" th:selected="${orden == 'asc'}">Más antiguos primero</option>
+                                    <option value="desc" th:selected="${orden == 'desc'}">Más recientes primero</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+                        </form>
                         <div class="table-responsive">
                             <table class="table table-bordered" width="100%" cellspacing="0">
                                 <thead class="thead-light">
