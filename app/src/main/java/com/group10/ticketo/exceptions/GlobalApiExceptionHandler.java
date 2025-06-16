@@ -1,6 +1,7 @@
 package com.group10.ticketo.exceptions;
 
 import com.group10.ticketo.dtos.ApiLoginResponseDTO;
+import com.group10.ticketo.dtos.ApiNotFoundResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,5 +15,7 @@ public class GlobalApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiLoginResponseDTO(ex.getMessage(), 401));
     }
+
+
 
 }
