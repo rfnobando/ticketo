@@ -6,6 +6,7 @@ import com.group10.ticketo.entities.Customer;
 import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.entities.TicketCategory;
 import com.group10.ticketo.entities.TicketMessage;
+import com.group10.ticketo.exceptions.TicketNotFoundException;
 import com.group10.ticketo.repositories.ITicketRepository;
 import com.group10.ticketo.services.ITicketService;
 import jakarta.transaction.Transactional;
@@ -99,9 +100,9 @@ public class TicketService implements ITicketService {
         ticketMessageRepository.save(ticketMessage);
     }
 
-    public TicketDTO findById(Long ticketId) throws Exception {
+    public TicketDTO findById(Long ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
-                ()-> new Exception("ERROR:Ticket not found.")
+                ()-> new TicketNotFoundException("ERROR:Ticket con id" +ticketId+"not found.")
         );
         TicketDTO dto = new TicketDTO();
 
