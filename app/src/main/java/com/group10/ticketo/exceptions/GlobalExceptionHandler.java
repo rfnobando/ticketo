@@ -1,12 +1,11 @@
 package com.group10.ticketo.exceptions;
 
-import com.group10.ticketo.dtos.CreateTicketMessageDTO;
-import com.group10.ticketo.dtos.CustomerRegistrationDTO;
-import com.group10.ticketo.dtos.TicketDTO;
-import com.group10.ticketo.dtos.TicketMessageDTO;
+import com.group10.ticketo.dtos.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,4 +45,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", ex.getMessage());
         return ViewRouteHelper.TICKET_MESSAGES;
     }
+
+    @ExceptionHandler(TicketNotFoundException.class)
+    public String handleTicketNotFoundException(TicketNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "errors/404"; // Asegurate de tener esta vista en templates/error/404.html
+    }
+
 }
