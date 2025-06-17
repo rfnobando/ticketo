@@ -15,7 +15,7 @@
         <h1 class="h3 mb-4 text-gray-800">Mensajes del Ticket</h1>
 
         <div class="card shadow mb-4">
-          <div class="card-header py-3">customerName
+          <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary" th:text="'Ticket: ' + ${ticket.title}">Título del ticket</h6>
             <p class="mb-0"><strong>Cliente:</strong> <span th:text="${customerName}"></span></p>
             <p class="mb-0"><strong>Estado:</strong> <span th:text="${ticket.currentStatus}"></span></p>
@@ -28,8 +28,25 @@
           </div>
 
           <div class="card-body">
-            <h5 class="mb-3">Historial de mensajes</h5>
 
+            <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: center;">
+              <h5 class="mb-3">Historial de mensajes</h5>
+              <div style="display: flex; gap: 0.5rem;">
+                <th:block th:if="${resolvedButton}">
+                  <form th:action="@{/tickets/{ticketId}/resolved(ticketId=${ticket.id})}" method="post"
+                        onsubmit="return confirm('¿Estás seguro que querés marcar el ticket como resuelto?');">
+                    <button type="submit" class="btn btn-success">Marcar como resuelto</button>
+                  </form>
+                </th:block>
+
+                <th:block th:if="${closeButton}">
+                  <form th:action="@{/tickets/{ticketId}/close(ticketId=${ticket.id})}" method="post"
+                        onsubmit="return confirm('¿Estás seguro que querés cerrar el ticket? Esta acción no se puede deshacer.');">
+                    <button type="submit" class="btn btn-danger">Cerrar Ticket</button>
+                  </form>
+                </th:block>
+              </div>
+            </div>
             <div class="chat-container mb-4">
               <div th:if="${#lists.isEmpty(messages)}" class="text-center text-muted">
                 No hay mensajes para este ticket.

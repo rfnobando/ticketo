@@ -11,6 +11,8 @@ import com.group10.ticketo.services.ITicketStatusService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,6 +34,11 @@ public class TicketStatusService implements ITicketStatusService {
         Pageable limitOne = PageRequest.of(0, 1);
         List<TicketStatus> result = ticketStatusRepository.findByTicketIdOrderByCreatedAtDesc(ticketId, limitOne);
         return result.isEmpty() ? null : result.get(0).getStatus().getName();
+    }
+    public TicketStatus findLastTicketStatusFromTicket(Long ticketId){
+        Pageable limitOne = PageRequest.of(0, 1);
+        List<TicketStatus> result = ticketStatusRepository.findByTicketIdOrderByCreatedAtDesc(ticketId, limitOne);
+        return result.isEmpty() ? null : result.get(0);
     }
 
     @Override
@@ -55,6 +62,17 @@ public class TicketStatusService implements ITicketStatusService {
         ticketStatusRepository.save(ticketStatus);
         return ticketStatus;
 
+    }
+    @Override
+    public TicketStatus finishTicketStatus(Long ticketStatusId) throws Exception {
+        if (ticketStatusId == null) {
+            throw new Exception("ERROR: Required data missing to create Ticket Status.");
+        }
+
+        TicketStatus ticketStatus = ticketStatusRepository.findById(ticketStatusId).orElseThrow(()-> new Exception("ERROR: TicketStatus not found"));
+        ticketStatus.setUpdatedAt(LocalDateTime.now());
+        ticketStatusRepository.save(ticketStatus);
+        return ticketStatus;
     }
 
 }
