@@ -141,7 +141,7 @@ public class TicketController {
             model.addAttribute("tituloPagina", "Tickets del Departamento");
             model.addAttribute("mensajeVacio", "No hay tickets registrados para tu departamento.");
             model.addAttribute("mostrarBotonCrear", false);
-            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/answered", "texto", "Ver contestados"));
+            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/answered", "texto", "Ver tickets contestados"));
             model.addAttribute("actionUrl", "/tickets/myDepartamentTickets");
             model.addAttribute("estadoFiltro", state);
             model.addAttribute("ordenFiltro", order);
@@ -154,20 +154,24 @@ public class TicketController {
 
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/answered")
-    public String getAnsweredTickets(Model model) {
+    public String getAnsweredTickets(@RequestParam(name = "estado", required = false) String state,
+                                     @RequestParam(name = "orden", required = false, defaultValue = "asc") String order,
+                                     Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = user.getPerson();
 
         if (person instanceof Employee) {
             Long employeeId = person.getId();
-            List<TicketDTO> tickets = ticketService.findTicketsAnsweredByEmployee(employeeId);
+            List<TicketDTO> tickets = ticketService.findTicketsAnsweredByEmployeeAndFilters(employeeId, state, order);
 
             model.addAttribute("tickets", tickets);
             model.addAttribute("tituloPagina", "Tickets Contestados");
             model.addAttribute("mensajeVacio", "No hay tickets contestados por vos.");
             model.addAttribute("mostrarBotonCrear", false);
-            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/myDepartamentTickets", "texto", "Volver a departamento"));
-
+            model.addAttribute("linkAlternativo", Map.of("url", "/tickets/myDepartamentTickets", "texto", "Ver tickets del departamento"));
+            model.addAttribute("actionUrl", "/tickets/answered");
+            model.addAttribute("estadoFiltro", state);
+            model.addAttribute("ordenFiltro", order);
 
             return ViewRouteHelper.TICKET_LIST;
         }

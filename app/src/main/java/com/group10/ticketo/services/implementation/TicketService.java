@@ -198,4 +198,35 @@ public class TicketService implements ITicketService {
                 .toList();
     }
 
+    @Override
+    public List<TicketDTO> findTicketsAnsweredByEmployeeAndFilters(Long employeeId,String state,String order){
+        List<Ticket> tickets;
+
+        if (state != null && !state.isEmpty()) {
+            if (order.equalsIgnoreCase("desc")) {
+                tickets = ticketRepository.findAnsweredTicketsByEmployeeAndStatusOrderByCreatedAtDesc(employeeId, state);
+            } else {
+                tickets = ticketRepository.findAnsweredTicketsByEmployeeAndStatusOrderByCreatedAtAsc(employeeId, state);
+            }
+        } else {
+            if (order.equalsIgnoreCase("desc")) {
+                tickets = ticketRepository.findAnsweredTicketsByEmployeeOrderByCreatedAtDesc(employeeId);
+            } else {
+                tickets = ticketRepository.findAnsweredTicketsByEmployeeOrderByCreatedAtAsc(employeeId);
+            }
+        }
+
+        return  tickets.stream()
+                .map(ticket -> new TicketDTO(
+                        ticket.getId(),
+                        ticket.getTitle(),
+                        ticket.getCreatedAt(),
+                        ticket.getUpdatedAt(),
+                        ticketStatusService.findByTicketIdOrderByCreatedAtDesc(ticket.getId()),
+                        ticket.getTicketCategory().getName()
+                ))
+                .toList();
+
+    }
+
 }
