@@ -14,6 +14,7 @@ import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketStatusService;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -90,10 +91,23 @@ public class TicketMessageService implements ITicketMessageService {
         );
 
 
-        TicketStatus ticketStatus = ticketStatusRepository.findFirstByTicketIdOrderByCreatedAtDesc(ticket.getId());
-        if(person instanceof Customer && !ticketStatus.getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS )){
-            throw new TicketMessageNotAllowedException("ERROR: Customer cannot sen a message if the Status is not In Progress", ticket.getId());
+        TicketStatus ticketStatus = ticketStatusRepository.findFirstByTicketIdOrderByCreatedAtDesc(ticket.getId());//tendria que ser service, pero si funca no lo toco >:)
+
+        Duration duration = Duration.between(ticketStatus.getCreatedAt(),LocalDateTime.now());
+        boolean moreThan48Hours = duration.toHours() > 48;// para que no quede un choclo enorme en el if
+        boolean isCustomer = person instanceof Customer;
+        String statusName = ticketStatus.getStatus().getName();
+
+        if (isCustomer && statusName.equals(TicketStatusConstants.RESOLVED) && !moreThan48Hours) {
+            ticketStatusService.finishTicketStatus(ticketStatus.getId());
+            ticketStatusService.createTicketStatus(ticket.getId(), TicketStatusConstants.IN_PROGRESS, null);
+        } else if (isCustomer && !statusName.equals(TicketStatusConstants.IN_PROGRESS)) {
+            throw new TicketMessageNotAllowedException(
+                    "ERROR: Customer cannot send a message if the Status is not In Progress",
+                    ticket.getId()
+            );
         }
+
 
         TicketMessage ticketMessage = new TicketMessage();
         ticketMessage.setTicket(ticket);
@@ -105,6 +119,8 @@ public class TicketMessageService implements ITicketMessageService {
 
         ticket.setUpdatedAt(LocalDateTime.now());
         ticketRepository.save(ticket);
+
+
 
         if(person instanceof Employee employee ){
             if(ticketStatus.getStatus().getName().equals(TicketStatusConstants.PENDING)){
