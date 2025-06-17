@@ -91,8 +91,8 @@ public class TicketMessageService implements ITicketMessageService {
 
 
         TicketStatus ticketStatus = ticketStatusRepository.findFirstByTicketIdOrderByCreatedAtDesc(ticket.getId());
-        if(person instanceof Customer && ticketStatus.getStatus().getName().equals(TicketStatusConstants.PENDING)){
-            throw new TicketMessageNotAllowedException("ERROR: Customer cannot sen a message if the Status is Pending", ticket.getId());
+        if(person instanceof Customer && !ticketStatus.getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS )){
+            throw new TicketMessageNotAllowedException("ERROR: Customer cannot sen a message if the Status is not In Progress", ticket.getId());
         }
 
         TicketMessage ticketMessage = new TicketMessage();

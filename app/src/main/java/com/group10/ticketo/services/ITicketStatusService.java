@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ITicketStatusService {
-    public String findByTicketIdOrderByCreatedAtDesc(Long ticketId);
-    public TicketStatus createTicketStatus(Long ticketId, String statusName, Long employeeId) throws Exception;
+     String findByTicketIdOrderByCreatedAtDesc(Long ticketId);
+     TicketStatus findLastTicketStatusFromTicket(Long ticketId);
+     TicketStatus createTicketStatus(Long ticketId, String statusName, Long employeeId) throws Exception;
+     TicketStatus finishTicketStatus(Long ticketStatusId) throws Exception;
 }
 
