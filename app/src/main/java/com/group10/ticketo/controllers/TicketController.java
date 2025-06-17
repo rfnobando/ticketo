@@ -87,7 +87,8 @@ public class TicketController {
                         .filter(role -> role.getPermissions()!=null)
                         .flatMap(role -> role.getPermissions().stream())
                         .anyMatch(permission -> PermissionConstants.CLOSE_TICKET.equals(permission.getPermission()));
-
+        TicketStatus ticketStatus = ticketStatusService.findLastTicketStatusFromTicket(ticketId);
+        boolean closeButton = hasCloseTicketPermission && !ticketStatus.getStatus().getName().equals(TicketStatusConstants.CLOSED);
 
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
@@ -95,7 +96,7 @@ public class TicketController {
         model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
         model.addAttribute("customerName", ticket.getCustomer().getName());
         model.addAttribute("resolvedButton", person instanceof Employee && ticketStatusService.findLastTicketStatusFromTicket(ticketId).getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS));
-        model.addAttribute("closeButton", hasCloseTicketPermission);
+        model.addAttribute("closeButton", closeButton);
         return ViewRouteHelper.TICKET_MESSAGES;
     }
 
