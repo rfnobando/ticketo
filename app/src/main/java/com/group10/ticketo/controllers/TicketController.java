@@ -81,6 +81,7 @@ public class TicketController {
             session.setAttribute("lastTicketPage", referer);
         }
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Person person = user.getPerson();
         boolean hasCloseTicketPermission = user.getRoles().stream()
                         .filter(role -> role.getPermissions()!=null)
