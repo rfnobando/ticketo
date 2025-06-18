@@ -28,4 +28,6 @@ public interface ITicketService {
     Long findCustomerId (Long ticketId) throws Exception;
     //Trae a los tickets respondidos por un empleado
     List<TicketDTO> findTicketsAnsweredByEmployee(Long employeeId);
+    //Trae a los tickets respondidos por un empleado segun el filtro
+    List<TicketDTO> findTicketsAnsweredByEmployeeAndFilters(Long employeeId,String state,String order);
 }

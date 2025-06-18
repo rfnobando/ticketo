@@ -109,5 +109,61 @@ public interface ITicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("SELECT DISTINCT tm.ticket FROM TicketMessage tm WHERE tm.person.id = :employeeId")
     List<Ticket> findTicketsAnsweredByEmployee(@Param("employeeId") Long employeeId);
+
+    @Query("""
+            SELECT DISTINCT tm.ticket
+            FROM TicketMessage tm
+            WHERE tm.person.id = :employeeId
+            ORDER BY tm.ticket.createdAt ASC
+            """)
+    List<Ticket> findAnsweredTicketsByEmployeeOrderByCreatedAtAsc(@Param("employeeId") Long employeeId);
+
+    @Query("""
+            SELECT DISTINCT tm.ticket
+            FROM TicketMessage tm
+            WHERE tm.person.id = :employeeId
+            ORDER BY tm.ticket.createdAt DESC
+            """)
+    List<Ticket> findAnsweredTicketsByEmployeeOrderByCreatedAtDesc(@Param("employeeId") Long employeeId);
+
+    @Query("""
+            SELECT DISTINCT tm.ticket
+            FROM TicketMessage tm
+            WHERE tm.person.id = :employeeId
+              AND EXISTS (
+                SELECT 1
+                FROM TicketStatus ts
+                WHERE ts.ticket = tm.ticket
+                  AND ts.createdAt = (
+                    SELECT MAX(ts2.createdAt)
+                    FROM TicketStatus ts2
+                    WHERE ts2.ticket = tm.ticket
+                  )
+                  AND ts.status.name = :status
+              )
+            ORDER BY tm.ticket.createdAt ASC
+            """)
+    List<Ticket> findAnsweredTicketsByEmployeeAndStatusOrderByCreatedAtAsc(@Param("employeeId") Long employeeId,
+                                                                           @Param("status") String status);
+    @Query("""
+            SELECT DISTINCT tm.ticket
+            FROM TicketMessage tm
+            WHERE tm.person.id = :employeeId
+              AND EXISTS (
+                SELECT 1
+                FROM TicketStatus ts
+                WHERE ts.ticket = tm.ticket
+                  AND ts.createdAt = (
+                    SELECT MAX(ts2.createdAt)
+                    FROM TicketStatus ts2
+                    WHERE ts2.ticket = tm.ticket
+                  )
+                  AND ts.status.name = :status
+              )
+            ORDER BY tm.ticket.createdAt DESC
+            """)
+    List<Ticket> findAnsweredTicketsByEmployeeAndStatusOrderByCreatedAtDesc(@Param("employeeId") Long employeeId,
+                                                                            @Param("status") String status);
+
 }
 
