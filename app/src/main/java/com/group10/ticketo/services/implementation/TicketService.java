@@ -1,13 +1,13 @@
 package com.group10.ticketo.services.implementation;
 
+import com.group10.ticketo.constants.TicketStatusConstants;
 import com.group10.ticketo.dtos.CreateTicketDTO;
 import com.group10.ticketo.dtos.TicketDTO;
-import com.group10.ticketo.entities.Customer;
-import com.group10.ticketo.entities.Ticket;
-import com.group10.ticketo.entities.TicketCategory;
-import com.group10.ticketo.entities.TicketMessage;
+import com.group10.ticketo.entities.*;
 import com.group10.ticketo.exceptions.TicketNotFoundException;
+import com.group10.ticketo.exceptions.ChangeTicketStatusNotAllowedException;
 import com.group10.ticketo.repositories.ITicketRepository;
+import com.group10.ticketo.services.IMailService;
 import com.group10.ticketo.services.ITicketService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -25,16 +25,18 @@ public class TicketService implements ITicketService {
     private final ICustomerRepository customerRepository;
     private final ITicketCategoryRepository ticketCategoryRepository;
     private final ITicketMessageRepository ticketMessageRepository;
+    private final IMailService mailService;
 
     public TicketService(ITicketRepository ticketRepository, IStatusService statusService,
                          ITicketStatusService ticketStatusService, ICustomerRepository customerRepository,
-                         ITicketCategoryRepository ticketCategoryRepository, ITicketMessageRepository ticketMessageRepository){
+                         ITicketCategoryRepository ticketCategoryRepository, ITicketMessageRepository ticketMessageRepository, IMailService mailService){
         this.ticketRepository = ticketRepository;
         this.statusService = statusService;
         this.ticketStatusService = ticketStatusService;
         this.customerRepository = customerRepository;
         this.ticketCategoryRepository = ticketCategoryRepository;
         this.ticketMessageRepository = ticketMessageRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -159,6 +161,69 @@ public class TicketService implements ITicketService {
         ticketMessage.setPerson(customer);
 
         ticketMessageRepository.save(ticketMessage);
+    }
+
+    @Override
+    @Transactional
+    public void resolveTicket (Long ticketId, Long employeeId) throws Exception {
+        if (ticketId == null || employeeId == null) throw  new Exception("ERROR: Required data missing to create Ticket Status");
+
+        ticketRepository.findById(ticketId).orElseThrow(()->new Exception("ERROR: ticket not found"));
+        TicketStatus ticketStatus = ticketStatusService.findLastTicketStatusFromTicket(ticketId);
+        if (ticketStatus.getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS)){
+            ticketStatusService.finishTicketStatus(ticketStatus.getId());
+            ticketStatusService.createTicketStatus(ticketId,TicketStatusConstants.RESOLVED,employeeId);
+
+            Ticket ticket = findByIdTicket(ticketId);
+            if(ticket == null) throw new Exception("Error: The ticket is null");
+            Customer customer = ticket.getCustomer();
+            if(customer == null) throw new Exception("Error: The customer is null");
+            User user = customer.getUser();
+            if(user == null) throw new Exception("Error: The user is null");
+
+            String subject = "[No Reply] Your Ticket Has Been Marked as Resolved – Ticketo";
+            String body = "Dear " + customer.getName() + ",\n\n"
+                    + "Your ticket titled \"" + ticket.getTitle() + "\" has been marked as Resolved by our support team.\n\n"
+                    + "If you are satisfied with the resolution, no further action is required.\n\n"
+                    + "However, if you still need assistance, you can continue the conversation by submitting a new message to your ticket within the next 48 hours. "
+                    + "This will automatically change the ticket status back to In Progress.\n\n"
+                    + "Please note: after 48 hours, the ticket will remain in Resolved status and it will no longer accept new messages, even if the issue remains unresolved.\n\n"
+                    + "This is an automated message. Do not reply to this email.\n\n"
+                    + "Thank you for using Ticketo.\n\n"
+                    + "Best regards,\nThe Ticketo Support Team";
+            mailService.sendMail(user.getEmail(),subject,body);
+        }else throw new ChangeTicketStatusNotAllowedException("ERROR: The ticket needs to be ´in progress´ status to be resolved", ticketId);
+
+    }
+    @Override
+    @Transactional
+    public void closeTicket (Long ticketId, Long employeeId) throws Exception{
+        if (ticketId == null || employeeId == null) throw  new Exception("ERROR: Required data missing to create Ticket Status");
+
+        ticketRepository.findById(ticketId).orElseThrow(()->new Exception("ERROR: ticket not found"));
+        TicketStatus ticketStatus = ticketStatusService.findLastTicketStatusFromTicket(ticketId);
+        if (!ticketStatus.getStatus().getName().equals(TicketStatusConstants.CLOSED)){
+            ticketStatusService.finishTicketStatus(ticketStatus.getId());
+            ticketStatusService.createTicketStatus(ticketId,TicketStatusConstants.CLOSED,employeeId);
+
+            Ticket ticket = findByIdTicket(ticketId);
+            if(ticket == null) throw new Exception("Error: The ticket is null");
+            Customer customer = ticket.getCustomer();
+            if(customer == null) throw new Exception("Error: The customer is null");
+            User user = customer.getUser();
+            if(user == null) throw new Exception("Error: The user is null");
+
+            String subject = "[No Reply] Your Ticket Has Been Closed – Ticketo";
+            String body = "Dear " + customer.getName() + ",\n\n"
+                    + "We are writing to inform you that your ticket titled \"" + ticket.getTitle() + "\" has been closed by our support team.\n\n"
+                    + "This means the ticket has been finalized and no further messages or replies will be accepted.\n\n"
+                    + "If you have a new or related issue, we kindly ask you to open a new ticket through your Ticketo account.\n\n"
+                    + "This is an automated message. Do not reply to this email.\n\n"
+                    + "Thank you for using Ticketo.\n\n"
+                    + "Best regards,\nThe Ticketo Support Team";
+            mailService.sendMail(user.getEmail(),subject,body);
+        }else throw new ChangeTicketStatusNotAllowedException("ERROR: The ticket is already closed", ticketId);
+
     }
 
     public TicketDTO findById(Long ticketId) {

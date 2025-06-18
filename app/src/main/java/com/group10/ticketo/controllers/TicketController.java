@@ -1,5 +1,7 @@
 package com.group10.ticketo.controllers;
 
+import com.group10.ticketo.constants.PermissionConstants;
+import com.group10.ticketo.constants.TicketStatusConstants;
 import com.group10.ticketo.dtos.*;
 import com.group10.ticketo.entities.*;
 import com.group10.ticketo.helpers.ViewRouteHelper;
@@ -7,6 +9,7 @@ import com.group10.ticketo.repositories.ITicketCategoryRepository;
 import com.group10.ticketo.repositories.ITicketRepository;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
+import com.group10.ticketo.services.ITicketStatusService;
 import com.group10.ticketo.services.implementation.TicketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,13 +32,15 @@ public class TicketController {
     private final ITicketMessageService ticketMessageService;
     private final ITicketCategoryRepository ticketCategoryRepository;
     private final ITicketRepository ticketRepository;
+    private final ITicketStatusService ticketStatusService;
 
     public TicketController(ITicketService ticketService, ITicketMessageService ticketMessageService,
-                            ITicketCategoryRepository ticketCategoryRepository, ITicketRepository ticketRepository) {
+                            ITicketCategoryRepository ticketCategoryRepository, ITicketRepository ticketRepository, ITicketStatusService ticketStatusService) {
         this.ticketService = ticketService;
         this.ticketMessageService = ticketMessageService;
         this.ticketCategoryRepository = ticketCategoryRepository;
         this.ticketRepository = ticketRepository;
+        this.ticketStatusService = ticketStatusService;
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
@@ -75,13 +80,23 @@ public class TicketController {
         if (referer != null && !referer.contains("/tickets/" + ticketId + "/messages")) {
             session.setAttribute("lastTicketPage", referer);
         }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        Person person = user.getPerson();
+        boolean hasCloseTicketPermission = user.getRoles().stream()
+                        .filter(role -> role.getPermissions()!=null)
+                        .flatMap(role -> role.getPermissions().stream())
+                        .anyMatch(permission -> PermissionConstants.CLOSE_TICKET.equals(permission.getPermission()));
+        TicketStatus ticketStatus = ticketStatusService.findLastTicketStatusFromTicket(ticketId);
+        boolean closeButton = hasCloseTicketPermission && !ticketStatus.getStatus().getName().equals(TicketStatusConstants.CLOSED);
 
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
         model.addAttribute("customerId", customerId);
         model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
         model.addAttribute("customerName", ticket.getCustomer().getName());
+        model.addAttribute("resolvedButton", person instanceof Employee && ticketStatusService.findLastTicketStatusFromTicket(ticketId).getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS));
+        model.addAttribute("closeButton", closeButton);
         return ViewRouteHelper.TICKET_MESSAGES;
     }
 
@@ -100,6 +115,25 @@ public class TicketController {
 
         return "redirect:/tickets/{ticketId}/messages";
     }
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    @PostMapping("/{ticketId}/resolved")
+    public String resolvedTicket(@PathVariable("ticketId") Long ticketId)throws Exception{
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        ticketService.resolveTicket(ticketId, user.getId());
+
+        return "redirect:/tickets/{ticketId}/messages";
+    }
+    @PreAuthorize("hasAuthority('CLOSE_TICKET')")
+    @PostMapping("/{ticketId}/close")
+    public String closeTicket(@PathVariable("ticketId") Long ticketId)throws Exception{
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        ticketService.closeTicket(ticketId, user.getId());
+
+        return "redirect:/tickets/{ticketId}/messages";
+    }
+
 
     @PreAuthorize("hasAuthority('CREATE_TICKET')")
     @GetMapping("/create")
