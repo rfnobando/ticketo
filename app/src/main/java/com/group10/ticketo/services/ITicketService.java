@@ -30,4 +30,7 @@ public interface ITicketService {
     List<TicketDTO> findTicketsAnsweredByEmployee(Long employeeId);
     //Trae a los tickets respondidos por un empleado segun el filtro
     List<TicketDTO> findTicketsAnsweredByEmployeeAndFilters(Long employeeId,String state,String order);
+
+    void resolveTicket (Long ticketId, Long employeeId) throws Exception;
+    void closeTicket (Long ticketId, Long employeeId) throws Exception;
 }

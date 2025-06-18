@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateTicketMessageDTO {
     @NotEmpty(message = "El mensaje no puede estar vacío.")
-    @Size(max = 1000, message = "El mensaje no puede superar los 1000 caracteres.")
+    @Size(max = 5000, message = "El mensaje no puede superar los 1000 caracteres.")
     private String body;
 
     @Size(max = 255, message = "La URL de la imagen es demasiado larga.")

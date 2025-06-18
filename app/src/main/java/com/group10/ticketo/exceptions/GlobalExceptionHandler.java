@@ -1,11 +1,10 @@
 package com.group10.ticketo.exceptions;
 
 import com.group10.ticketo.dtos.*;
+import com.group10.ticketo.entities.Ticket;
 import com.group10.ticketo.helpers.ViewRouteHelper;
 import com.group10.ticketo.services.ITicketMessageService;
 import com.group10.ticketo.services.ITicketService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,9 +37,26 @@ public class GlobalExceptionHandler {
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
         Long customerId = ticketService.findCustomerId(ticketId);
+        Ticket ticket = ticketService.findByIdTicket(ticketId);
         model.addAttribute("messages", messages);
         model.addAttribute("ticket", ticketDTO);
         model.addAttribute("customerId", customerId);
+        model.addAttribute("customerName", ticket.getCustomer().getName());
+        model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
+        model.addAttribute("error", ex.getMessage());
+        return ViewRouteHelper.TICKET_MESSAGES;
+    }
+    @ExceptionHandler(ChangeTicketStatusNotAllowedException.class)
+    public String handleChangeTicketStatusNotAllowedException(ChangeTicketStatusNotAllowedException ex, Model model) throws Exception {
+        Long ticketId = ex.getTicketId();
+        List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
+        TicketDTO ticketDTO = ticketService.findById(ticketId);
+        Long customerId = ticketService.findCustomerId(ticketId);
+        Ticket ticket = ticketService.findByIdTicket(ticketId);
+        model.addAttribute("messages", messages);
+        model.addAttribute("ticket", ticketDTO);
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("customerName", ticket.getCustomer().getName());
         model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
         model.addAttribute("error", ex.getMessage());
         return ViewRouteHelper.TICKET_MESSAGES;
