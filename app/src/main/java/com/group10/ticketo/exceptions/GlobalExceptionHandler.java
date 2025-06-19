@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TicketMessageNotAllowedException.class)
-    public String handleTicketMessageNotAllowed(TicketMessageNotAllowedException ex, Model model) throws Exception {
+    public String handleTicketMessageNotAllowed(TicketMessageNotAllowedException ex) {
         Long ticketId = ex.getTicketId();
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
@@ -52,7 +54,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ChangeTicketStatusNotAllowedException.class)
-    public String handleChangeTicketStatusNotAllowedException(ChangeTicketStatusNotAllowedException ex, Model model) throws Exception {
+    public String handleChangeTicketStatusNotAllowedException(ChangeTicketStatusNotAllowedException ex) {
         Long ticketId = ex.getTicketId();
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
