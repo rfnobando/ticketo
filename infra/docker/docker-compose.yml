@@ -1,0 +1,48 @@
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/certbot:/var/certbot
+    depends_on:
+      - ticketo
+    networks:
+      - vps_infra
+
+  ticketo:
+    build:
+      context: ../../app
+      dockerfile: Dockerfile
+    container_name: ticketo-app-prod
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - vps_infra
+
+  db:
+    image: mysql:8.0
+    container_name: ticketo-db-prod
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_MYSQL_ROOT_PASSWORD}
+    restart: unless-stopped
+    volumes:
+      - ticketo_db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - vps_infra
+
+volumes:
+  ticketo_db_data:
+
+networks:
+  vps_infra:
