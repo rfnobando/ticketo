@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head('Home')}">
+    <title></title>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <ul th:replace="~{fragments/sidebar :: sidebar}"></ul>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="~{fragments/topbar :: topbar}"></nav>
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Home</h1>
+                </div>
+                <div class="container py-3">
+                    <!-- Outer Row -->
+                    <div class="row justify-content-center">
+                        <div class="col-xl-10 col-lg-12 col-md-9">
+                            <div class="card o-hidden border-0 shadow-lg my-5">
+                                <div class="card-body p-0">
+                                    <!-- Nested Row within Card Body -->
+                                    <div class="row">
+                                        <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                                        <div class="col-lg-7">
+                                            <div class="p-5">
+                                                <div class="text-center pb-3">
+                                                    <h1 class="h4 text-gray-900 mb-4">Registrar Empleado</h1>
+                                                    <small class="text-danger" th:if="${error}">Hubo un error al
+                                                        procesar los
+                                                        datos.</small>
+                                                </div>
+                                                <form class="user needs-validation"
+                                                      th:action="@{/auth/registerEmployee}"
+                                                      th:object="${employee}" method="post" novalidate>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                                            <input type="text" th:field="*{name}"
+                                                                   class="form-control form-control-user"
+                                                                   id="name" required
+                                                                   placeholder="Nombre/s">
+                                                            <small class="text-danger"
+                                                                   th:if="${#fields.hasErrors('name')}"
+                                                                   th:errors="*{name}"></small>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" th:field="*{surname}"
+                                                                   class="form-control form-control-user" id="surname"
+                                                                   required
+                                                                   placeholder="Apellido/s">
+                                                            <small class="text-danger"
+                                                                   th:if="${#fields.hasErrors('surname')}"
+                                                                   th:errors="*{surname}"></small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="email" th:field="*{email}"
+                                                               class="form-control form-control-user"
+                                                               id="email" required
+                                                               placeholder="Email">
+                                                        <small class="text-danger" th:if="${#fields.hasErrors('email')}"
+                                                               th:errors="*{email}"></small>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                                            <input type="password"
+                                                                   class="form-control form-control-user"
+                                                                   th:field="*{password}" id="password"
+                                                                   placeholder="Contraseña"
+                                                                   required>
+                                                            <small class="text-danger"
+                                                                   th:if="${#fields.hasErrors('password')}"
+                                                                   th:errors="*{password}"></small>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="password"
+                                                                   class="form-control form-control-user"
+                                                                   th:field="*{confirmPassword}" id="confirmPassword"
+                                                                   placeholder="Repetir contraseña" required>
+                                                            <small class="text-danger"
+                                                                   th:if="${#fields.hasErrors('confirmPassword')}"
+                                                                   th:errors="*{confirmPassword}"></small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <select class="form-control form-control-user"
+                                                                th:field="*{deparmentId}"
+                                                                required>
+                                                            <option value="" disabled selected>Seleccioná un
+                                                                departamento
+                                                            </option>
+                                                            <!-- Ejemplo dinámico, reemplazá con tus datos -->
+                                                            <option th:each="dept : ${departments}"
+                                                                    th:value="${dept.id}"
+                                                                    th:text="${dept.name}">
+                                                            </option>
+                                                        </select>
+                                                        <small class="text-danger"
+                                                               th:if="${#fields.hasErrors('deparmentId')}"
+                                                               th:errors="*{deparmentId}"></small>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="number" step="0.01" min="0" th:field="*{amount}"
+                                                               class="form-control form-control-user"
+                                                               id="amount" placeholder="Monto inicial ($)" required>
+                                                        <small class="text-danger"
+                                                               th:if="${#fields.hasErrors('amount')}"
+                                                               th:errors="*{amount}"></small>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                                        Crear Cuenta
+                                                    </button>
+                                                </form>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="~{fragments/footer :: footer}"></footer>
+    </div>
+</div>
+<a th:replace="~{fragments/utils :: scrollToTop}"></a>
+<div th:replace="~{fragments/utils :: logoutModal}"></div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

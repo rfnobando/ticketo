@@ -7,6 +7,7 @@ public final class ViewRouteHelper {
     public static final String USER_LOGIN = "authentication/login";
     public static final String USER_API_LOGIN = "authentication/api-login";
     public static final String REGISTER = "authentication/register";
+    public static final String REGISTER_EMPLOYEE = "authentication/registerEmployee";
     public static final String TICKET_LIST = "ticket/list";
     public static final String TICKET_LIST_EMPLOYEE = "ticket/list-employee";
     public static final String TICKET_MESSAGES = "ticket/messages";

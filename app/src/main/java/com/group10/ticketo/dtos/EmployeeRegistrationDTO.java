@@ -1,5 +1,6 @@
 package com.group10.ticketo.dtos;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,6 +14,16 @@ public class EmployeeRegistrationDTO {
 
     @NotBlank(message = "Debes ingresar al menos un apellido")
     private String surname;
+
+    @NotBlank(message = "Debes ingresar un email")
+    @Email
+    private String email;
+
+    @NotBlank(message = "Debes ingresar una contraseña")
+    private String password;
+
+    @NotBlank(message = "Debes repetir la contraseña")
+    private String confirmPassword;
 
     @NotNull(message = "Debes seleccionar un departamento")
     private Long deparmentId;
