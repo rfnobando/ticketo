@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @ControllerAdvice
@@ -32,34 +34,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TicketMessageNotAllowedException.class)
-    public String handleTicketMessageNotAllowed(TicketMessageNotAllowedException ex, Model model) throws Exception {
+    public String handleTicketMessageNotAllowed(TicketMessageNotAllowedException ex) {
         Long ticketId = ex.getTicketId();
-        List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
-        TicketDTO ticketDTO = ticketService.findById(ticketId);
-        Long customerId = ticketService.findCustomerId(ticketId);
-        Ticket ticket = ticketService.findByIdTicket(ticketId);
-        model.addAttribute("messages", messages);
-        model.addAttribute("ticket", ticketDTO);
-        model.addAttribute("customerId", customerId);
-        model.addAttribute("customerName", ticket.getCustomer().getName());
-        model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
-        model.addAttribute("error", ex.getMessage());
-        return ViewRouteHelper.TICKET_MESSAGES;
+        String encodedMessage = URLEncoder.encode(ex.getMessage(), StandardCharsets.UTF_8);
+        return "redirect:/tickets/" + ticketId + "/messages?error=" + encodedMessage;
     }
     @ExceptionHandler(ChangeTicketStatusNotAllowedException.class)
-    public String handleChangeTicketStatusNotAllowedException(ChangeTicketStatusNotAllowedException ex, Model model) throws Exception {
+    public String handleChangeTicketStatusNotAllowedException(ChangeTicketStatusNotAllowedException ex) {
         Long ticketId = ex.getTicketId();
-        List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
-        TicketDTO ticketDTO = ticketService.findById(ticketId);
-        Long customerId = ticketService.findCustomerId(ticketId);
-        Ticket ticket = ticketService.findByIdTicket(ticketId);
-        model.addAttribute("messages", messages);
-        model.addAttribute("ticket", ticketDTO);
-        model.addAttribute("customerId", customerId);
-        model.addAttribute("customerName", ticket.getCustomer().getName());
-        model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
-        model.addAttribute("error", ex.getMessage());
-        return ViewRouteHelper.TICKET_MESSAGES;
+        String encodedMessage = URLEncoder.encode(ex.getMessage(), StandardCharsets.UTF_8);
+        return "redirect:/tickets/" + ticketId + "/messages?error=" + encodedMessage;
     }
 
     @ExceptionHandler(TicketNotFoundException.class)
