@@ -181,6 +181,7 @@ public class DbSeeder implements CommandLineRunner {
         if(permissionRepository.count() == 0){
             permissionRepository.save(buildPermission(PermissionConstants.CREATE_TICKET,RoleConstants.CUSTOMER));
             permissionRepository.save(buildPermission(PermissionConstants.CLOSE_TICKET,RoleConstants.ADMIN));
+            permissionRepository.save(buildPermission(PermissionConstants.CREATE_EMPLOYEE,RoleConstants.ADMIN));
         }
     }
     private Permission buildPermission(String name,String role){
