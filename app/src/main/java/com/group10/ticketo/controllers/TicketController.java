@@ -66,27 +66,29 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/messages")
     public String getTicketMessages(@PathVariable("ticketId") Long ticketId,
+                                    @RequestParam(value = "error", required = false) String error,
                                     HttpServletRequest request,
                                     HttpSession session,
                                     Model model) throws Exception {
+
         List<TicketMessageDTO> messages = ticketMessageService.findByTicketId(ticketId);
         TicketDTO ticketDTO = ticketService.findById(ticketId);
         Long customerId = ticketService.findCustomerId(ticketId);
-
         Ticket ticket = ticketService.findByIdTicket(ticketId);
-
 
         String referer = request.getHeader("Referer");
         if (referer != null && !referer.contains("/tickets/" + ticketId + "/messages")) {
             session.setAttribute("lastTicketPage", referer);
         }
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = user.getPerson();
+
         boolean hasCloseTicketPermission = user.getRoles().stream()
-                        .filter(role -> role.getPermissions()!=null)
-                        .flatMap(role -> role.getPermissions().stream())
-                        .anyMatch(permission -> PermissionConstants.CLOSE_TICKET.equals(permission.getPermission()));
+                .filter(role -> role.getPermissions() != null)
+                .flatMap(role -> role.getPermissions().stream())
+                .anyMatch(permission -> PermissionConstants.CLOSE_TICKET.equals(permission.getPermission()));
+
         TicketStatus ticketStatus = ticketStatusService.findLastTicketStatusFromTicket(ticketId);
         boolean closeButton = hasCloseTicketPermission && !ticketStatus.getStatus().getName().equals(TicketStatusConstants.CLOSED);
 
@@ -95,10 +97,16 @@ public class TicketController {
         model.addAttribute("customerId", customerId);
         model.addAttribute("ticketMessageDTO", new CreateTicketMessageDTO());
         model.addAttribute("customerName", ticket.getCustomer().getName());
-        model.addAttribute("resolvedButton", person instanceof Employee && ticketStatusService.findLastTicketStatusFromTicket(ticketId).getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS));
+        model.addAttribute("resolvedButton", person instanceof Employee && ticketStatus.getStatus().getName().equals(TicketStatusConstants.IN_PROGRESS));
         model.addAttribute("closeButton", closeButton);
+
+        if (error != null && !error.isEmpty()) {
+            model.addAttribute("error", error);
+        }
+
         return ViewRouteHelper.TICKET_MESSAGES;
     }
+
 
     @PostMapping("/{ticketId}/messages")
     public String createTicketMessage(@PathVariable("ticketId") Long ticketId, @ModelAttribute("ticketMessageDTO") @Valid CreateTicketMessageDTO dto,
