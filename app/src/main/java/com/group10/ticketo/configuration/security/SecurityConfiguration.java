@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                             "/auth/loginSuccess",
                             "/auth/logout",
                             "/auth/register",
+                            "/auth/registerEmployee",
                             "/api/v1/**"
                     ).permitAll();
                     auth.anyRequest().authenticated();
