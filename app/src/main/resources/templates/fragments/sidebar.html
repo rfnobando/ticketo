@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <title></title>
 </head>
@@ -28,13 +28,13 @@
             Secciones
         </div>
         <!-- Nav Item -->
-        <li class="nav-item">
+        <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
             <a class="nav-link" href="/tickets/myDepartamentTickets">
                 <i class="fas fa-fw fa-envelope-open-text"></i>
                 <span>Gestionar Tickets</span></a>
         </li>
         <!-- Nav Item -->
-        <li class="nav-item">
+        <li class="nav-item" sec:authorize="hasRole('ROLE_CUSTOMER')">
             <a class="nav-link" href="/tickets/myTickets">
                 <i class="fas fa-fw fa-envelope-open-text"></i>
                 <span>Mis Tickets</span></a>
