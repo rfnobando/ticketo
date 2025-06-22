@@ -3,13 +3,6 @@ FROM maven:3.9.6-eclipse-temurin-21 AS build
 COPY . /app
 WORKDIR /app
 
-ENV DB_USERNAME=
-ENV DB_PASSWORD=
-ENV DB_URL=jdbc:mysql://db:3306/dbname
-ENV PORT=8080
-ENV EMAIL= 
-ENV APP_PASSWORD=
-
 RUN mvn clean package -DskipTests
 
 # Final stage
@@ -18,12 +11,5 @@ WORKDIR /app
 COPY --from=build /app/target/ticketo-0.0.1-SNAPSHOT.jar ticketo.jar
 
 EXPOSE 8080
-
-ENV DB_USERNAME=
-ENV DB_PASSWORD=
-ENV DB_URL=jdbc:mysql://db:3306/dbname
-ENV PORT=8080 
-ENV EMAIL=
-ENV APP_PASSWORD=
 
 ENTRYPOINT ["java", "-jar", "ticketo.jar"]

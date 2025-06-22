@@ -22,6 +22,13 @@ services:
       context: ../../app
       dockerfile: Dockerfile
     container_name: ticketo-app-prod
+    environment:
+      DB_USERNAME: "${APP_DB_USERNAME}"
+      DB_PASSWORD: "${APP_DB_PASSWORD}"
+      DB_URL: "jdbc:mysql://db:3306/${APP_DB_NAME}"
+      PORT: "${APP_PORT}"
+      EMAIL: "${APP_EMAIL}"
+      APP_PASSWORD: "${APP_APP_PASSWORD}"
     restart: unless-stopped
     depends_on:
       - db
@@ -32,7 +39,7 @@ services:
     image: mysql:8.0
     container_name: ticketo-db-prod
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: "${DB_MYSQL_ROOT_PASSWORD}"
     restart: unless-stopped
     volumes:
       - ticketo_db_data:/var/lib/mysql
